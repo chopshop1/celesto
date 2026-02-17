@@ -3,6 +3,9 @@ compatibility_date = "2026-02-10"
 compatibility_flags = ["nodejs_compat"]
 main = ".svelte-kit/cloudflare/_worker.js"
 
+[vars]
+PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAACeHt5hIw2c2lzRj"
+
 [assets]
 directory = ".svelte-kit/cloudflare"
 binding = "ASSETS"
