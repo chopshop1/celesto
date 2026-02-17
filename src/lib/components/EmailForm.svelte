@@ -31,7 +31,8 @@
 						turnstileToken = token;
 					},
 					theme: 'dark',
-					size: 'compact'
+					size: 'compact',
+					appearance: 'interaction-only'
 				});
 			} else {
 				timer = setTimeout(tryRender, 200);
