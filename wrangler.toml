@@ -1,5 +1,6 @@
 name = "celesto"
 compatibility_date = "2026-02-10"
+compatibility_flags = ["nodejs_compat"]
 main = ".svelte-kit/cloudflare/_worker.js"
 
 [assets]

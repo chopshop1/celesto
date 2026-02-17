@@ -1,0 +1,33 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0A0A0A"/>
+
+  <!-- Grid lines (brutalist) -->
+  <line x1="0" y1="1" x2="1200" y2="1" stroke="#F5F3EF" stroke-width="2"/>
+  <line x1="0" y1="629" x2="1200" y2="629" stroke="#F5F3EF" stroke-width="2"/>
+  <line x1="1" y1="0" x2="1" y2="630" stroke="#F5F3EF" stroke-width="2"/>
+  <line x1="1199" y1="0" x2="1199" y2="630" stroke="#F5F3EF" stroke-width="2"/>
+
+  <!-- Decorative wireframe circle (planetary orbit) -->
+  <circle cx="950" cy="315" r="200" stroke="#B8A9E8" stroke-width="1" fill="none" opacity="0.3"/>
+  <circle cx="950" cy="315" r="140" stroke="#B8A9E8" stroke-width="1" fill="none" opacity="0.2"/>
+  <circle cx="950" cy="315" r="80" stroke="#B8A9E8" stroke-width="1" fill="none" opacity="0.15"/>
+  <!-- Planet dots -->
+  <circle cx="1150" cy="315" r="4" fill="#B8A9E8" opacity="0.5"/>
+  <circle cx="950" cy="175" r="3" fill="#B8A9E8" opacity="0.4"/>
+  <circle cx="870" cy="315" r="5" fill="#B8A9E8" opacity="0.6"/>
+
+  <!-- Celesto wordmark -->
+  <text x="100" y="240" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#F5F3EF" font-style="italic">Celesto</text>
+
+  <!-- Tagline -->
+  <text x="100" y="310" font-family="'Courier New', monospace" font-size="24" fill="#888888">Your AI astrological therapist.</text>
+
+  <!-- Subline -->
+  <text x="100" y="360" font-family="'Courier New', monospace" font-size="18" fill="#B8A9E8">Chat with your chart. Navigate the chaos.</text>
+
+  <!-- Decorative accent line -->
+  <rect x="100" y="400" width="120" height="2" fill="#B8A9E8"/>
+
+  <!-- URL -->
+  <text x="100" y="450" font-family="'Courier New', monospace" font-size="16" fill="#555555">celesto.app</text>
+</svg>
