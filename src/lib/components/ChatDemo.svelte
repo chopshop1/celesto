@@ -72,7 +72,7 @@
 			Ask the Stars
 		</h2>
 		<p class="font-mono text-sm text-stone text-center mb-12 max-w-lg mx-auto">
-			Your birth chart has answers. Celesto doesn't just read horoscopes — it reads you.
+			Your birth chart has answers. Celesto reads your chart, interprets transits, and gives you real guidance.
 		</p>
 
 		<div

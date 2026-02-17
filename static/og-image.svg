@@ -20,7 +20,7 @@
   <text x="100" y="240" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" fill="#F5F3EF" font-style="italic">Celesto</text>
 
   <!-- Tagline -->
-  <text x="100" y="310" font-family="'Courier New', monospace" font-size="24" fill="#888888">Your AI astrological therapist.</text>
+  <text x="100" y="310" font-family="'Courier New', monospace" font-size="24" fill="#888888">Your AI chart reader & astrological consultant.</text>
 
   <!-- Subline -->
   <text x="100" y="360" font-family="'Courier New', monospace" font-size="18" fill="#B8A9E8">Chat with your chart. Navigate the chaos.</text>

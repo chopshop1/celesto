@@ -25,7 +25,7 @@
 			period: '/mo',
 			features: [
 				'Unlimited AI chart readings',
-				'Therapist mode — real talk, not fluff',
+				'AI consultant — instant chart interpretations',
 				'Full natal chart analysis',
 				'Synastry & compatibility reports'
 			],

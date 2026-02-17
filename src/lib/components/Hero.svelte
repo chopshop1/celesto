@@ -73,7 +73,7 @@
 					<div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-lavender/20 bg-lavender/[0.04]">
 						<span class="inline-block w-1.5 h-1.5 rounded-full bg-lavender animate-pulse-slow"></span>
 						<span class="font-mono text-[11px] text-lavender tracking-widest uppercase">
-							Your AI astrological therapist
+							AI-powered chart reader & consultant
 						</span>
 					</div>
 				</div>

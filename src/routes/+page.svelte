@@ -22,7 +22,7 @@
 				"name": "Celesto",
 				"url": "https://celesto.app",
 				"logo": "https://celesto.app/favicon.svg",
-				"description": "AI-powered astrological therapist and calendar app",
+				"description": "AI chart reader and instant astrological consultant. Celesto uses AI to decode natal charts, interpret transits, and deliver personalized horoscope insights.",
 				"sameAs": []
 			},
 			{
@@ -30,7 +30,8 @@
 				"name": "Celesto",
 				"applicationCategory": "LifestyleApplication",
 				"operatingSystem": "iOS, Android, Web",
-				"description": "AI astrology app and horoscope calendar. Chat with your birth chart AI, sync your astrological calendar, and plan around the stars.",
+				"description": "AI chart reader, interpreter, and instant astrological consultant. Decode your natal chart with AI, get transit insights, and sync your personalized horoscope calendar.",
+				"keywords": "AI astrology app, birth chart reader, AI chart reader, astrological consultant, horoscope calendar, AI chart interpreter, natal chart AI, astrology calendar app",
 				"url": "https://celesto.app",
 				"offers": [
 					{
