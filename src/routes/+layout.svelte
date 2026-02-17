@@ -6,6 +6,14 @@
 
 <svelte:head>
 	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+	<noscript>
+		<style>
+			[data-reveal], [data-card], [data-day], [data-ai-response] {
+				opacity: 1 !important;
+				transform: none !important;
+			}
+		</style>
+	</noscript>
 </svelte:head>
 
 <a href="#main-content" class="skip-link">Skip to content</a>

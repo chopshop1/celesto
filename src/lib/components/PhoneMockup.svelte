@@ -4,12 +4,10 @@
 
 <div class="animate-float" aria-hidden="true">
 	<div
-		class="relative mx-auto w-[260px] sm:w-[280px]"
-		style="perspective: 1000px;"
+		class="relative mx-auto w-[260px] sm:w-[280px] sm:[perspective:1000px]"
 	>
 		<div
-			class="border-2 border-parchment bg-void-light p-3 sm:p-4"
-			style="transform: rotateY(-5deg) rotateX(5deg); transform-style: preserve-3d;"
+			class="border-2 border-parchment bg-void-light p-3 sm:p-4 sm:[transform:rotateY(-5deg)_rotateX(5deg)] sm:[transform-style:preserve-3d]"
 		>
 			<!-- Status bar -->
 			<div class="flex items-center justify-between mb-4 px-1">
@@ -25,7 +23,7 @@
 				<!-- AI message -->
 				<div class="border-l-2 border-lavender pl-3">
 					<p class="text-[11px] text-lavender font-mono leading-relaxed">
-						Mercury is in retrograde, maybe don't text him back.
+						Mercury retrograde in your 7th house. Don't text him back.
 					</p>
 				</div>
 
@@ -39,7 +37,7 @@
 				<!-- AI message -->
 				<div class="border-l-2 border-lavender pl-3">
 					<p class="text-[11px] text-lavender font-mono leading-relaxed">
-						Saturn says no. Let's check your calendar for a power day instead.
+						That's your Venus talking. Saturn says wait. You have a power day Friday — use it.
 					</p>
 				</div>
 			</div>

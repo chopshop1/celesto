@@ -9,7 +9,7 @@
 	let typedText = $state('');
 
 	const userMessage = 'I feel stuck in my career.';
-	const aiResponse = 'Your 10th house is currently empty, but Saturn is in transit. This is a time for building foundations, not instant gratification. Let\'s look at next Tuesday for your big meeting.';
+	const aiResponse = 'Saturn is transiting your 10th house and squaring your natal Mars. This isn\'t a dead end — it\'s a restructuring. Stop forcing it. Thursday has a Venus trine that favors networking. Let\'s prep for that instead.';
 
 	$effect(() => {
 		if (!container || hasAnimated) return;
@@ -70,7 +70,7 @@
 			Ask the Stars
 		</h2>
 		<p class="font-mono text-sm text-stone text-center mb-12 max-w-lg mx-auto">
-			Have a real conversation with your birth chart. Celesto doesn't just read horoscopes — it reads you.
+			Your birth chart has answers. Celesto doesn't just read horoscopes — it reads you.
 		</p>
 
 		<div
@@ -79,7 +79,7 @@
 		>
 			<!-- Chat header -->
 			<div class="flex items-center gap-3 border-b-2 border-parchment/10 pb-4 mb-6">
-				<div class="w-2 h-2 bg-lavender"></div>
+				<div class="w-2 h-2 bg-lavender" aria-hidden="true"></div>
 				<span class="font-mono text-xs text-stone uppercase tracking-widest">Celesto AI</span>
 			</div>
 

@@ -1,9 +1,16 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Hero from '$lib/components/Hero.svelte';
 	import ChatDemo from '$lib/components/ChatDemo.svelte';
 	import CalendarFeature from '$lib/components/CalendarFeature.svelte';
 	import Pricing from '$lib/components/Pricing.svelte';
 	import FooterCTA from '$lib/components/FooterCTA.svelte';
+
+	let utmSource = $derived(
+		$page.url.searchParams.get('utm_source')
+		|| $page.url.searchParams.get('ref')
+		|| ''
+	);
 </script>
 
 <svelte:head>
@@ -14,14 +21,17 @@
 				"@type": "Organization",
 				"name": "Celesto",
 				"url": "https://celesto.app",
-				"description": "AI-powered astrological therapist and calendar app"
+				"logo": "https://celesto.app/favicon.svg",
+				"description": "AI-powered astrological therapist and calendar app",
+				"sameAs": []
 			},
 			{
 				"@type": "SoftwareApplication",
 				"name": "Celesto",
 				"applicationCategory": "LifestyleApplication",
 				"operatingSystem": "iOS, Android, Web",
-				"description": "Your AI astrological therapist. Sync your calendar, chat with your chart, and navigate the chaos.",
+				"description": "AI astrology app and horoscope calendar. Chat with your birth chart AI, sync your astrological calendar, and plan around the stars.",
+				"url": "https://celesto.app",
 				"offers": [
 					{
 						"@type": "Offer",
@@ -47,8 +57,8 @@
 	})}</script>`}
 </svelte:head>
 
-<Hero />
+<Hero {utmSource} />
 <ChatDemo />
 <CalendarFeature />
 <Pricing />
-<FooterCTA />
+<FooterCTA {utmSource} />

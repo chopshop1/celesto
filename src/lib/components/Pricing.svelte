@@ -11,8 +11,8 @@
 			tierSlug: 'stargazer',
 			price: 'Free',
 			features: [
-				'Daily horoscopes',
-				'Basic transit alerts',
+				'Daily horoscope (sun sign only)',
+				'3 transit alerts per week',
 				'Weekly overview',
 				'Community access'
 			],
@@ -24,13 +24,13 @@
 			price: '$9',
 			period: '/mo',
 			features: [
-				'Unlimited AI chat',
-				'Therapist mode',
-				'Birth chart deep dives',
-				'Relationship compatibility'
+				'Unlimited AI chart readings',
+				'Therapist mode — real talk, not fluff',
+				'Full natal chart analysis',
+				'Synastry & compatibility reports'
 			],
 			highlighted: true,
-			ctaLabel: 'Get Believer'
+			ctaLabel: 'Claim Early Access'
 		},
 		{
 			tier: 'Celestial',
@@ -38,12 +38,12 @@
 			price: '$19',
 			period: '/mo',
 			features: [
-				'Full calendar sync',
+				'Everything in Believer',
+				'Full calendar sync & power days',
 				'Predictive life planning',
-				'Power day scheduling',
-				'Priority support'
+				'Priority support & beta features'
 			],
-			ctaLabel: 'Get Celestial'
+			ctaLabel: 'Claim Early Access'
 		}
 	];
 
@@ -79,7 +79,7 @@
 			Choose Your Path
 		</h2>
 		<p class="font-mono text-sm text-stone text-center mb-12 max-w-lg mx-auto">
-			Start free. Go deeper when you're ready.
+			Everyone gets the horoscope. Not everyone gets the whole chart.
 		</p>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">

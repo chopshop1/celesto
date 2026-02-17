@@ -44,18 +44,18 @@
 					href="#waitlist"
 					class="brutalist-border-lavender bg-transparent px-5 py-2 font-mono text-sm uppercase tracking-widest text-lavender hover:bg-lavender hover:text-void transition-colors"
 				>
-					Join Waitlist
+					Claim Your Spot
 				</a>
 			</div>
 
 			<!-- Mobile hamburger -->
 			<button
-				class="md:hidden text-parchment p-2"
+				class="md:hidden text-parchment p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
 				onclick={() => (mobileOpen = !mobileOpen)}
 				aria-label="Toggle menu"
 				aria-expanded={mobileOpen}
 			>
-				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 					{#if mobileOpen}
 						<path stroke-linecap="square" stroke-width="2" d="M6 6l12 12M6 18L18 6" />
 					{:else}
@@ -69,11 +69,11 @@
 	<!-- Mobile menu -->
 	{#if mobileOpen}
 		<div class="md:hidden bg-void border-t-2 border-parchment">
-			<div class="flex flex-col px-4 py-4 gap-4">
+			<div class="flex flex-col px-4 py-4 gap-2">
 				{#each navLinks as link}
 					<a
 						href={link.href}
-						class="font-mono text-sm uppercase tracking-widest text-stone hover:text-parchment"
+						class="font-mono text-sm uppercase tracking-widest text-stone hover:text-parchment py-3 min-h-[44px] flex items-center"
 						onclick={closeMobile}
 					>
 						{link.label}
@@ -81,10 +81,10 @@
 				{/each}
 				<a
 					href="#waitlist"
-					class="brutalist-border-lavender bg-transparent px-5 py-2 font-mono text-sm uppercase tracking-widest text-lavender text-center hover:bg-lavender hover:text-void transition-colors"
+					class="brutalist-border-lavender bg-transparent px-5 py-3 font-mono text-sm uppercase tracking-widest text-lavender text-center hover:bg-lavender hover:text-void transition-colors min-h-[44px] flex items-center justify-center"
 					onclick={closeMobile}
 				>
-					Join Waitlist
+					Claim Your Spot
 				</a>
 			</div>
 		</div>

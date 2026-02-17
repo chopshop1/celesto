@@ -114,7 +114,7 @@
 	<ul class="flex-1 flex flex-col gap-3 mb-8">
 		{#each features as feature}
 			<li class="flex items-start gap-2 font-mono text-sm text-stone">
-				<span class="text-lavender mt-0.5">+</span>
+				<span class="text-lavender mt-0.5" aria-hidden="true">+</span>
 				{feature}
 			</li>
 		{/each}
@@ -122,9 +122,9 @@
 
 	{#if showForm && isPaid}
 		{#if status === 'success'}
-			<div class="brutalist-border-lavender p-4 text-center">
-				<p class="text-lavender font-mono text-sm font-semibold">You're on the list for {tier}.</p>
-				<p class="text-stone text-xs mt-1">We'll notify you at launch.</p>
+			<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
+				<p class="text-lavender font-mono text-sm font-semibold">{tier} locked in. The universe approves.</p>
+				<p class="text-stone text-xs mt-1">We'll reach out before launch.</p>
 			</div>
 		{:else}
 			<form onsubmit={handleSubmit} class="flex flex-col gap-2">
@@ -137,7 +137,7 @@
 					bind:value={email}
 					placeholder="your@email.com"
 					required
-					class="w-full bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none transition-colors"
+					class="w-full bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none focus:ring-2 focus:ring-lavender/50 focus:ring-offset-1 focus:ring-offset-void transition-colors"
 				/>
 				<div bind:this={turnstileEl} class="mt-1"></div>
 				<button

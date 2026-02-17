@@ -85,15 +85,15 @@
 					Schedule with Intention.
 				</h2>
 				<p class="font-mono text-sm text-stone leading-relaxed mb-6">
-					Celesto syncs with Google and Apple Calendar to overlay astrological transits on your real schedule. Know when to push hard and when to lay low.
+					Celesto syncs with Google and Apple Calendar to overlay transits on your real life. See which days to push and which days to cancel everything.
 				</p>
 				<div class="flex gap-6 font-mono text-xs">
 					<div class="flex items-center gap-2">
-						<div class="w-3 h-3 bg-lavender"></div>
+						<div class="w-3 h-3 bg-lavender" aria-hidden="true"></div>
 						<span class="text-lavender">Power Day</span>
 					</div>
 					<div class="flex items-center gap-2">
-						<div class="w-3 h-3 bg-stone/30"></div>
+						<div class="w-3 h-3 bg-stone/30" aria-hidden="true"></div>
 						<span class="text-stone">Bad Energy</span>
 					</div>
 				</div>

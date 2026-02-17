@@ -29,6 +29,13 @@ button, a, [role="button"] {
 	cursor: pointer;
 }
 
+/* Visible focus for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+	outline: 2px solid var(--color-lavender);
+	outline-offset: 2px;
+}
+
 body {
 	background-color: var(--color-void);
 	color: var(--color-parchment);
@@ -120,6 +127,25 @@ html {
 	animation: blink 1s step-end infinite;
 }
 
+/* Success feedback animation */
+@keyframes fade-in {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+	animation: fade-in 0.3s ease-out;
+}
+
+/* Scroll-reveal fallback: ensure elements are visible if JS/animation fails */
+noscript + style,
+.no-js [data-reveal],
+.no-js [data-card],
+.no-js [data-day],
+.no-js [data-ai-response] {
+	opacity: 1 !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
 	.animate-float,
@@ -131,5 +157,12 @@ html {
 	}
 	html {
 		scroll-behavior: auto;
+	}
+	[data-reveal],
+	[data-card],
+	[data-day],
+	[data-ai-response] {
+		opacity: 1 !important;
+		transform: none !important;
 	}
 }

@@ -77,9 +77,9 @@
 	</div>
 
 	{#if status === 'success'}
-		<div class="brutalist-border-lavender p-4 text-center">
-			<p class="text-lavender font-mono text-sm font-semibold">You're on the list.</p>
-			<p class="text-stone text-xs mt-1">We'll be in touch when it's your time.</p>
+		<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
+			<p class="text-lavender font-mono text-sm font-semibold">You're in. The stars noticed.</p>
+			<p class="text-stone text-xs mt-1">We'll reach out when it's time.</p>
 		</div>
 	{:else}
 		<div class="flex flex-col sm:flex-row gap-2">
@@ -88,14 +88,14 @@
 				bind:value={email}
 				placeholder="your@email.com"
 				required
-				class="flex-1 bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none transition-colors"
+				class="flex-1 bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none focus:ring-2 focus:ring-lavender/50 focus:ring-offset-1 focus:ring-offset-void transition-colors"
 			/>
 			<button
 				type="submit"
 				disabled={status === 'loading'}
 				class="bg-lavender text-void px-6 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
 			>
-				{status === 'loading' ? '...' : 'Join'}
+				{status === 'loading' ? '...' : 'Claim Spot'}
 			</button>
 		</div>
 

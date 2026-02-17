@@ -3,6 +3,12 @@
 	import EmailForm from './EmailForm.svelte';
 	import PhoneMockup from './PhoneMockup.svelte';
 
+	interface Props {
+		utmSource?: string;
+	}
+
+	let { utmSource = '' }: Props = $props();
+
 	let section: HTMLElement | undefined = $state();
 
 	$effect(() => {
@@ -40,10 +46,13 @@
 					class="font-mono text-sm sm:text-base text-stone max-w-lg leading-relaxed"
 					style="opacity: 0;"
 				>
-					Your AI astrological therapist. Sync your calendar, chat with your chart, and navigate the chaos.
+					Your birth chart, decoded. Your schedule, aligned. Your next move, mapped.
+				</p>
+				<p data-reveal class="font-mono text-xs text-lavender" style="opacity: 0;">
+					Join 2,000+ stargazers on the waitlist
 				</p>
 				<div data-reveal style="opacity: 0;">
-					<EmailForm id="hero-waitlist" referralSource="hero" />
+					<EmailForm id="hero-waitlist" referralSource={utmSource || 'hero'} />
 				</div>
 			</div>
 
