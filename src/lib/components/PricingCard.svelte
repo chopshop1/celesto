@@ -35,16 +35,28 @@
 	let isPaid = $derived(tierSlug !== 'stargazer');
 
 	$effect(() => {
-		if (showForm && turnstileEl && typeof window !== 'undefined' && window.turnstile) {
-			widgetId = window.turnstile.render(turnstileEl, {
-				sitekey: env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
-				callback: (token: string) => {
-					turnstileToken = token;
-				},
-				theme: 'dark',
-				size: 'compact'
-			});
+		if (!showForm || !turnstileEl) return;
+
+		let timer: ReturnType<typeof setTimeout>;
+
+		function tryRender() {
+			if (typeof window !== 'undefined' && window.turnstile && turnstileEl) {
+				widgetId = window.turnstile.render(turnstileEl, {
+					sitekey: env.PUBLIC_TURNSTILE_SITE_KEY,
+					callback: (token: string) => {
+						turnstileToken = token;
+					},
+					theme: 'dark',
+					size: 'compact'
+				});
+			} else {
+				timer = setTimeout(tryRender, 200);
+			}
 		}
+
+		tryRender();
+
+		return () => clearTimeout(timer);
 	});
 
 	function handleCta() {
@@ -142,7 +154,7 @@
 				<div bind:this={turnstileEl} class="mt-1"></div>
 				<button
 					type="submit"
-					disabled={status === 'loading'}
+					disabled={status === 'loading' || !turnstileToken}
 					class="w-full bg-lavender text-void px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
 				>
 					{status === 'loading' ? '...' : 'Reserve Spot'}
