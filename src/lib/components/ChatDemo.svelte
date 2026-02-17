@@ -69,10 +69,10 @@
 <section id="chat" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-3xl">
 		<h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-parchment mb-4 text-center">
-			Ask the Stars
+			Like texting an astrologer who knows your whole chart
 		</h2>
 		<p class="font-mono text-sm text-stone text-center mb-12 max-w-lg mx-auto">
-			Your birth chart has answers. Celesto reads your chart, interprets transits, and gives you real guidance.
+			Ask about your career, relationships, timing — anything. Celesto interprets your actual transits and gives specific, actionable answers.
 		</p>
 
 		<div
@@ -116,6 +116,17 @@
 					</div>
 				{/if}
 			</div>
+		</div>
+
+		<!-- Mid-page CTA -->
+		<div class="mt-12 text-center">
+			<p class="font-mono text-sm text-stone mb-4">Get answers like this — personalized to your chart.</p>
+			<a
+				href="#waitlist"
+				class="inline-block brutalist-border-lavender bg-transparent px-6 py-3 font-mono text-sm uppercase tracking-widest text-lavender hover:bg-lavender hover:text-void transition-colors"
+			>
+				Join the Waitlist
+			</a>
 		</div>
 	</div>
 </section>

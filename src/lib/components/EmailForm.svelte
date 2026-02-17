@@ -6,14 +6,16 @@
 		id?: string;
 		endpoint?: string;
 		referralSource?: string;
+		ctaText?: string;
 	}
 
-	let { id = 'waitlist', endpoint = '/api/waitlist', referralSource = 'direct' }: Props = $props();
+	let { id = 'waitlist', endpoint = '/api/waitlist', referralSource = 'direct', ctaText = 'Join the Waitlist' }: Props = $props();
 
 	let email = $state('');
 	let website = $state('');
 	let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
 	let errorMessage = $state('');
+	let waitlistPosition = $state<number | null>(null);
 	let turnstileToken = $state('');
 	let turnstileEl: HTMLDivElement | undefined = $state();
 	let widgetId = $state<string | undefined>(undefined);
@@ -67,6 +69,7 @@
 
 			if (res.ok) {
 				setWaitlistEmail(email);
+				waitlistPosition = data.position ?? null;
 				status = 'success';
 				email = '';
 			} else {
@@ -93,8 +96,9 @@
 
 	{#if status === 'success'}
 		<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
-			<p class="text-lavender font-mono text-sm font-semibold">You're in. The stars noticed.</p>
-			<p class="text-stone text-xs mt-1">We'll reach out when it's time.</p>
+			<p class="text-lavender font-mono text-sm font-semibold">
+				{#if waitlistPosition}You're #{waitlistPosition} on the waitlist. Check your email.{:else}You're on the waitlist. Check your email.{/if}
+			</p>
 		</div>
 	{:else}
 		<div class="flex flex-col sm:flex-row gap-2">
@@ -103,6 +107,9 @@
 				bind:value={email}
 				placeholder="your@email.com"
 				required
+				autocomplete="email"
+				inputmode="email"
+				aria-label="Email address"
 				class="flex-1 bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none focus:ring-2 focus:ring-lavender/50 focus:ring-offset-1 focus:ring-offset-void transition-colors"
 			/>
 			<button
@@ -110,11 +117,13 @@
 				disabled={status === 'loading' || !turnstileToken}
 				class="bg-lavender text-void px-6 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
 			>
-				{status === 'loading' ? '...' : 'Claim Spot'}
+				{status === 'loading' ? 'Submitting...' : !turnstileToken ? 'Verifying...' : ctaText}
 			</button>
 		</div>
 
 		<div bind:this={turnstileEl} class="mt-1"></div>
+
+		<p class="font-mono text-xs text-stone text-center">Free. No spam. Early access when we launch.</p>
 
 		{#if status === 'error'}
 			<p class="text-red-400 font-mono text-xs">{errorMessage}</p>

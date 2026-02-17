@@ -137,9 +137,15 @@
 </script>
 
 <div
-	class="flex flex-col h-full p-6 sm:p-8 bg-void-light
+	class="relative flex flex-col h-full p-6 sm:p-8 bg-void-light
 		{highlighted ? 'brutalist-border-lavender' : 'brutalist-border'}"
 >
+	{#if highlighted}
+		<span class="absolute -top-3 left-6 bg-lavender text-void font-mono text-[11px] uppercase tracking-widest px-3 py-1">
+			Recommended
+		</span>
+	{/if}
+
 	<div class="mb-6">
 		<h3 class="font-serif text-xl font-bold {highlighted ? 'text-lavender' : 'text-parchment'}">
 			{tier}
@@ -183,6 +189,9 @@
 					bind:value={email}
 					placeholder="your@email.com"
 					required
+					autocomplete="email"
+					inputmode="email"
+					aria-label="Email address"
 					class="w-full bg-void-surface border-2 border-parchment px-4 py-3 font-mono text-sm text-parchment placeholder:text-stone focus:border-lavender focus:outline-none focus:ring-2 focus:ring-lavender/50 focus:ring-offset-1 focus:ring-offset-void transition-colors"
 				/>
 				<div bind:this={turnstileEl} class="mt-1"></div>
@@ -191,7 +200,7 @@
 					disabled={status === 'loading' || !turnstileToken}
 					class="w-full bg-lavender text-void px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
 				>
-					{status === 'loading' ? '...' : 'Reserve Spot'}
+					{status === 'loading' ? 'Submitting...' : !turnstileToken ? 'Verifying...' : `Reserve ${tier}`}
 				</button>
 				{#if status === 'error'}
 					<p class="text-red-400 font-mono text-xs">{errorMessage}</p>

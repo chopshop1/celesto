@@ -82,10 +82,10 @@
 			<!-- Copy -->
 			<div>
 				<h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-parchment mb-4">
-					Schedule with Intention.
+					Your calendar, aligned with the stars.
 				</h2>
 				<p class="font-mono text-sm text-stone leading-relaxed mb-6">
-					Celesto syncs with Google and Apple Calendar to overlay transits on your real life. See which days to push and which days to cancel everything.
+					See which days are cosmically in your favor — and which ones to avoid for big decisions, launches, or tough conversations.
 				</p>
 				<div class="flex gap-6 font-mono text-xs">
 					<div class="flex items-center gap-2">
@@ -94,7 +94,7 @@
 					</div>
 					<div class="flex items-center gap-2">
 						<div class="w-3 h-3 bg-stone/30" aria-hidden="true"></div>
-						<span class="text-stone">Bad Energy</span>
+						<span class="text-stone">Lay Low</span>
 					</div>
 				</div>
 			</div>
@@ -138,6 +138,17 @@
 					{/each}
 				</div>
 			</div>
+		</div>
+
+		<!-- Mid-page CTA -->
+		<div class="mt-12 text-center">
+			<p class="font-mono text-sm text-stone mb-4">Never miss a power day.</p>
+			<a
+				href="#waitlist"
+				class="inline-block brutalist-border-lavender bg-transparent px-6 py-3 font-mono text-sm uppercase tracking-widest text-lavender hover:bg-lavender hover:text-void transition-colors"
+			>
+				Join the Waitlist
+			</a>
 		</div>
 	</div>
 </section>

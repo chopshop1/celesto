@@ -16,7 +16,7 @@
 				'Weekly overview',
 				'Community access'
 			],
-			ctaLabel: 'Join Waitlist'
+			ctaLabel: 'Join the Waitlist'
 		},
 		{
 			tier: 'Believer',
@@ -76,11 +76,23 @@
 <section bind:this={section} id="pricing" class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-5xl">
 		<h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-parchment mb-4 text-center">
-			Choose Your Path
+			Early Access Pricing
 		</h2>
-		<p class="font-mono text-sm text-stone text-center mb-12 max-w-lg mx-auto">
-			Everyone gets the horoscope. Not everyone gets the whole chart.
+		<p class="font-mono text-sm text-stone text-center mb-8 max-w-lg mx-auto">
+			Lock in these prices before launch. Waitlist members get first access.
 		</p>
+
+		<!-- Social proof -->
+		<div class="flex items-center justify-center gap-3 mb-12">
+			<div class="flex -space-x-2">
+				<div class="w-5 h-5 rounded-full border-2 border-void" style="background: #B8A9E8; opacity: 0.8;" aria-hidden="true"></div>
+				<div class="w-5 h-5 rounded-full border-2 border-void" style="background: #8B7BBF; opacity: 0.8;" aria-hidden="true"></div>
+				<div class="w-5 h-5 rounded-full border-2 border-void" style="background: #D0C5F0; opacity: 0.8;" aria-hidden="true"></div>
+			</div>
+			<p class="font-mono text-xs text-stone">
+				<span class="text-parchment font-semibold">2,000+</span> stargazers already waiting
+			</p>
+		</div>
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 			{#each tiers as t}

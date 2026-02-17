@@ -44,7 +44,7 @@
 					href="#waitlist"
 					class="brutalist-border-lavender bg-transparent px-5 py-2 font-mono text-sm uppercase tracking-widest text-lavender hover:bg-lavender hover:text-void transition-colors"
 				>
-					Claim Your Spot
+					Join the Waitlist
 				</a>
 			</div>
 
@@ -84,7 +84,7 @@
 					class="brutalist-border-lavender bg-transparent px-5 py-3 font-mono text-sm uppercase tracking-widest text-lavender text-center hover:bg-lavender hover:text-void transition-colors min-h-[44px] flex items-center justify-center"
 					onclick={closeMobile}
 				>
-					Claim Your Spot
+					Join the Waitlist
 				</a>
 			</div>
 		</div>

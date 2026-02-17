@@ -73,7 +73,7 @@
 					<div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-lavender/20 bg-lavender/[0.04]">
 						<span class="inline-block w-1.5 h-1.5 rounded-full bg-lavender animate-pulse-slow"></span>
 						<span class="font-mono text-[11px] text-lavender tracking-widest uppercase">
-							AI-powered chart reader & consultant
+							Your personal AI astrologer
 						</span>
 					</div>
 				</div>
@@ -95,8 +95,7 @@
 					class="font-mono text-sm sm:text-[15px] text-stone max-w-xl leading-relaxed"
 					style="opacity: 0;"
 				>
-					Celesto decodes your natal chart into real advice — not fluff.
-					Sync your calendar, spot your power days, and stop making decisions during Mercury retrograde.
+					Stop reading generic horoscopes. Celesto reads YOUR chart — your exact placements, transits, and timing — and gives you answers you can actually use.
 				</p>
 
 				<!-- Feature chips -->
@@ -140,7 +139,7 @@
 
 				<!-- CTA -->
 				<div data-reveal style="opacity: 0;">
-					<EmailForm id="hero-waitlist" referralSource={utmSource || 'hero'} />
+					<EmailForm id="hero-waitlist" referralSource={utmSource || 'hero'} ctaText="Join the Waitlist — It's Free" />
 				</div>
 			</div>
 

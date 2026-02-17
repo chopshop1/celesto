@@ -1,5 +1,12 @@
 <script lang="ts">
 	let { children } = $props();
+	import "@fontsource/playfair-display/400.css";
+	import "@fontsource/playfair-display/400-italic.css";
+	import "@fontsource/playfair-display/700.css";
+	import "@fontsource/playfair-display/700-italic.css";
+	import "@fontsource/playfair-display/900.css";
+	import "@fontsource/jetbrains-mono/400.css";
+	import "@fontsource/jetbrains-mono/600.css";
 	import "../app.css";
 	import Navbar from '$lib/components/Navbar.svelte';
 </script>
