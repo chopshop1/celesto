@@ -28,12 +28,21 @@
 <section
 	bind:this={section}
 	id="waitlist"
-	class="relative min-h-screen flex items-center pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+	class="relative flex items-start pt-14 sm:pt-16 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden"
 >
-	<div class="mx-auto max-w-6xl w-full">
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+	<!-- Ambient background gradient -->
+	<div class="hero-ambient"></div>
+
+	<div class="relative mx-auto max-w-6xl w-full z-10">
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 			<!-- Copy -->
-			<div class="flex flex-col gap-6 lg:gap-8">
+			<div class="flex flex-col gap-4 lg:gap-6">
+				<div data-reveal style="opacity: 0;">
+					<span class="inline-flex items-center gap-2 font-mono text-[11px] text-lavender/80 tracking-widest uppercase mb-2">
+						<span class="inline-block w-6 h-px bg-lavender/40"></span>
+						AI Astrology
+					</span>
+				</div>
 				<h1
 					data-reveal
 					class="font-serif text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] text-parchment"
@@ -63,3 +72,20 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	.hero-ambient {
+		position: absolute;
+		top: 0;
+		right: -10%;
+		width: 70%;
+		height: 100%;
+		background: radial-gradient(
+			ellipse at 60% 50%,
+			rgba(184, 169, 232, 0.06) 0%,
+			rgba(184, 169, 232, 0.02) 35%,
+			transparent 65%
+		);
+		pointer-events: none;
+	}
+</style>

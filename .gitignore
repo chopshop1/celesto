@@ -7,3 +7,6 @@ build
 .wrangler
 dist
 .DS_Store
+*.png
+!static/**/*.png
+.playwright-mcp
