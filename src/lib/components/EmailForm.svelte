@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { setWaitlistEmail } from '$lib/stores/waitlist-email.svelte';
 
 	interface Props {
 		id?: string;
@@ -64,6 +65,7 @@
 			const data = await res.json();
 
 			if (res.ok) {
+				setWaitlistEmail(email);
 				status = 'success';
 				email = '';
 			} else {

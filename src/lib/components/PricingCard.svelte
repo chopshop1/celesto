@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { getWaitlistEmail } from '$lib/stores/waitlist-email.svelte';
 
 	interface Props {
 		tier: string;
@@ -31,6 +32,7 @@
 	let turnstileToken = $state('');
 	let turnstileEl: HTMLDivElement | undefined = $state();
 	let widgetId = $state<string | undefined>(undefined);
+	let autoSubmit = $state(false);
 
 	let isPaid = $derived(tierSlug !== 'stargazer');
 
@@ -59,19 +61,30 @@
 		return () => clearTimeout(timer);
 	});
 
+	// Auto-submit once Turnstile token arrives for known-email flow
+	$effect(() => {
+		if (autoSubmit && turnstileToken) {
+			submitIntent(getWaitlistEmail(), turnstileToken);
+		}
+	});
+
 	function handleCta() {
 		if (!isPaid) {
-			// Free tier: scroll to waitlist
 			document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
 			return;
 		}
-		showForm = true;
+
+		const knownEmail = getWaitlistEmail();
+		if (knownEmail) {
+			autoSubmit = true;
+			status = 'loading';
+			showForm = true;
+		} else {
+			showForm = true;
+		}
 	}
 
-	async function handleSubmit(e: SubmitEvent) {
-		e.preventDefault();
-		if (status === 'loading') return;
-
+	async function submitIntent(submitEmail: string, token: string) {
 		status = 'loading';
 		errorMessage = '';
 
@@ -80,9 +93,9 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					email,
+					email: submitEmail,
 					tier: tierSlug,
-					turnstileToken,
+					turnstileToken: token,
 					website
 				})
 			});
@@ -94,16 +107,31 @@
 			} else {
 				status = 'error';
 				errorMessage = data.error || 'Something went wrong.';
+				// If auto-submit failed, let user try manually
+				if (autoSubmit) {
+					autoSubmit = false;
+					email = submitEmail;
+				}
 			}
 		} catch {
 			status = 'error';
 			errorMessage = 'Network error. Please try again.';
+			if (autoSubmit) {
+				autoSubmit = false;
+				email = submitEmail;
+			}
 		}
 
 		if (widgetId !== undefined && window.turnstile) {
 			window.turnstile.reset(widgetId);
 			turnstileToken = '';
 		}
+	}
+
+	async function handleSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		if (status === 'loading') return;
+		await submitIntent(email, turnstileToken);
 	}
 </script>
 
@@ -137,6 +165,11 @@
 			<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
 				<p class="text-lavender font-mono text-sm font-semibold">{tier} locked in. The universe approves.</p>
 				<p class="text-stone text-xs mt-1">We'll reach out before launch.</p>
+			</div>
+		{:else if autoSubmit && status === 'loading'}
+			<div class="p-4 text-center">
+				<p class="text-parchment font-mono text-sm">Reserving your spot...</p>
+				<div bind:this={turnstileEl} class="mt-2 flex justify-center"></div>
 			</div>
 		{:else}
 			<form onsubmit={handleSubmit} class="flex flex-col gap-2">
