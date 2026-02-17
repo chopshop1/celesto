@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { animate, stagger } from 'motion';
 	import EmailForm from './EmailForm.svelte';
-	import PhoneMockup from './PhoneMockup.svelte';
+	import AppDemo from './AppDemo.svelte';
 
 	interface Props {
 		utmSource?: string;
@@ -144,9 +144,9 @@
 				</div>
 			</div>
 
-			<!-- Phone — takes 5 cols -->
+			<!-- App demo — takes 5 cols -->
 			<div data-reveal class="lg:col-span-5 flex justify-center lg:justify-end" style="opacity: 0;">
-				<PhoneMockup />
+				<AppDemo />
 			</div>
 		</div>
 	</div>
