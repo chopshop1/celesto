@@ -84,7 +84,7 @@
 
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 			{#each tiers as t}
-				<div data-card style="opacity: 0;">
+				<div data-card class="h-full" style="opacity: 0;">
 					<PricingCard {...t} />
 				</div>
 			{/each}

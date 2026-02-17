@@ -137,7 +137,7 @@
 </script>
 
 <div
-	class="flex flex-col p-6 sm:p-8 bg-void-light
+	class="flex flex-col h-full p-6 sm:p-8 bg-void-light
 		{highlighted ? 'brutalist-border-lavender' : 'brutalist-border'}"
 >
 	<div class="mb-6">
