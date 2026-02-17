@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { animate } from 'motion';
+	import { tick } from 'svelte';
 
 	let container: HTMLElement | undefined = $state();
 	let hasAnimated = $state(false);
@@ -44,9 +45,10 @@
 				setTimeout(() => {
 					showTypingIndicator = true;
 					// Show AI response after typing indicator
-					setTimeout(() => {
+					setTimeout(async () => {
 						showTypingIndicator = false;
 						showAiResponse = true;
+						await tick();
 						if (container) {
 							const aiEl = container.querySelector('[data-ai-response]');
 							if (aiEl) {
