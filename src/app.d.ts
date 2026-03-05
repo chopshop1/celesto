@@ -15,6 +15,7 @@ declare global {
 	}
 
 	interface Window {
+		fbq: (...args: unknown[]) => void;
 		turnstile: {
 			render: (
 				element: HTMLElement,

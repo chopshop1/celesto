@@ -72,6 +72,9 @@
 				waitlistPosition = data.position ?? null;
 				status = 'success';
 				email = '';
+				if (typeof window !== 'undefined' && window.fbq) {
+					window.fbq('track', 'CompleteRegistration');
+				}
 			} else {
 				status = 'error';
 				errorMessage = data.error || 'Something went wrong.';

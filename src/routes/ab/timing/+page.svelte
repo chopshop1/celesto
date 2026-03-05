@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import TimingHero from '$lib/components/ab/TimingHero.svelte';
 	import TimingChatDemo from '$lib/components/ab/TimingChatDemo.svelte';
@@ -9,6 +10,12 @@
 	import FooterCTA from '$lib/components/FooterCTA.svelte';
 	import StickyCTA from '$lib/components/StickyCTA.svelte';
 	import ExitIntent from '$lib/components/ExitIntent.svelte';
+
+	onMount(() => {
+		if (typeof window !== 'undefined' && window.fbq) {
+			window.fbq('track', 'ViewContent');
+		}
+	});
 
 	let utmSource = $derived(
 		$page.url.searchParams.get('utm_source')
