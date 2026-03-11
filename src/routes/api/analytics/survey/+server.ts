@@ -98,7 +98,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 };
 
 /** POST — password login, sets session cookie */
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, cookies }) => {
 	let body: { password?: string };
 
 	try {
@@ -117,9 +117,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const token = await createSessionToken(env.ANALYTICS_PASSWORD);
 
-	return json(buildMetrics(rows), {
-		headers: {
-			'Set-Cookie': setSessionCookie(token)
-		}
+	cookies.set(COOKIE_NAME, token, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'strict',
+		path: '/',
+		maxAge: 60 * 60 * 24 // 24 hours
 	});
+
+	return json(buildMetrics(rows));
 };
