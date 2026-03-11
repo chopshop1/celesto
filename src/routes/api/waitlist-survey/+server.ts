@@ -15,10 +15,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json({ error: 'Invalid JSON body' }, { status: 400 });
 	}
 
-	if (!body.waitlistId || typeof body.waitlistId !== 'number') {
-		return json({ error: 'Valid waitlist ID is required' }, { status: 400 });
-	}
-
 	const emailValidation = validateEmail(body.email);
 	if (!emailValidation.valid) {
 		return json({ error: emailValidation.message }, { status: 400 });
@@ -29,9 +25,14 @@ export const POST: RequestHandler = async ({ request }) => {
 		return json({ error: surveyValidation.error }, { status: 400 });
 	}
 
-	const matchingWaitlistEntry = await db.query.waitlist.findFirst({
-		where: and(eq(waitlist.id, body.waitlistId), eq(waitlist.email, emailValidation.email))
-	});
+	const matchingWaitlistEntry =
+		typeof body.waitlistId === 'number'
+			? await db.query.waitlist.findFirst({
+					where: and(eq(waitlist.id, body.waitlistId), eq(waitlist.email, emailValidation.email))
+				})
+			: await db.query.waitlist.findFirst({
+					where: eq(waitlist.email, emailValidation.email)
+				});
 
 	if (!matchingWaitlistEntry) {
 		return json({ error: 'Waitlist signup not found' }, { status: 404 });
@@ -41,7 +42,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const result = await db
 			.insert(waitlistSurveyResponses)
 			.values({
-				waitlistId: body.waitlistId,
+				waitlistId: matchingWaitlistEntry.id,
 				email: emailValidation.email,
 				answers: surveyValidation.answers,
 				app: 'celesto'

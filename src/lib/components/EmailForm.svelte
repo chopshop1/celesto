@@ -22,6 +22,7 @@
 	let turnstileToken = $state('');
 	let turnstileEl: HTMLDivElement | undefined = $state();
 	let widgetId = $state<string | undefined>(undefined);
+	let showSurvey = $derived(status === 'success' && submittedEmail.length > 0);
 
 	$effect(() => {
 		if (!turnstileEl) return;
@@ -101,19 +102,7 @@
 		<input type="text" id="{id}-hp" name="website" bind:value={website} tabindex="-1" autocomplete="off" />
 	</div>
 
-	{#if status === 'success'}
-		<div class="w-full max-w-2xl">
-			<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
-				<p class="text-lavender font-mono text-sm font-semibold">
-					{#if waitlistPosition}You're #{waitlistPosition} on the waitlist. Check your email.{:else}You're on the waitlist. Check your email.{/if}
-				</p>
-			</div>
-
-			{#if waitlistId && submittedEmail}
-				<WaitlistSurvey waitlistId={waitlistId} email={submittedEmail} />
-			{/if}
-		</div>
-	{:else}
+	{#if status !== 'success'}
 		<div class="flex flex-col sm:flex-row gap-2">
 			<input
 				type="email"
@@ -143,3 +132,17 @@
 		{/if}
 	{/if}
 </form>
+
+{#if status === 'success'}
+	<div class="w-full max-w-2xl">
+		<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
+			<p class="text-lavender font-mono text-sm font-semibold">
+				{#if waitlistPosition}You're #{waitlistPosition} on the waitlist. Check your email.{:else}You're on the waitlist. Check your email.{/if}
+			</p>
+		</div>
+	</div>
+{/if}
+
+{#if showSurvey}
+	<WaitlistSurvey waitlistId={waitlistId} email={submittedEmail} />
+{/if}

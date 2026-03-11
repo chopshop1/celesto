@@ -8,11 +8,11 @@
 	import { browser } from '$app/environment';
 
 	interface Props {
-		waitlistId: number;
+		waitlistId?: number | null;
 		email: string;
 	}
 
-	let { waitlistId, email }: Props = $props();
+	let { waitlistId = null, email }: Props = $props();
 
 	let answers = $state<WaitlistSurveyAnswers>(getEmptyWaitlistSurveyAnswers());
 	let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -69,6 +69,18 @@
 		answers[questionId] = value;
 	}
 
+	function portal(node: HTMLElement) {
+		if (!browser) return;
+
+		document.body.appendChild(node);
+
+		return {
+			destroy() {
+				node.remove();
+			}
+		};
+	}
+
 	$effect(() => {
 		if (!browser || dismissed) return;
 
@@ -82,137 +94,140 @@
 </script>
 
 {#if !dismissed}
-	<div class="survey-modal" role="dialog" aria-modal="true" aria-label="Waitlist survey">
-		<button
-			type="button"
-			class="survey-backdrop"
-			aria-label="Close survey"
-			onclick={() => {
-				dismissed = true;
-			}}
-		></button>
-
-		<div class="survey-panel brutalist-border bg-void-surface/95 p-6 sm:p-8 w-full max-w-4xl max-h-[92vh] overflow-y-auto relative z-10 animate-fade-in">
+	<div use:portal class="survey-modal" role="dialog" aria-modal="true" aria-label="Waitlist survey">
 			<button
 				type="button"
+				class="survey-backdrop"
+				aria-label="Close survey"
 				onclick={() => {
 					dismissed = true;
 				}}
-				class="absolute top-3 right-3 text-stone hover:text-parchment transition-colors font-mono text-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
-				aria-label="Close survey"
-			>
-				&times;
-			</button>
+			></button>
 
-			{#if status === 'success'}
-				<div class="space-y-2 text-left animate-fade-in pr-10">
-					<p class="font-mono text-xs uppercase tracking-[0.24em] text-lavender">Thanks — saved</p>
-					<h3 class="font-serif text-2xl text-parchment">We’ll build with this in mind.</h3>
-					<p class="font-mono text-sm text-stone">Your answers are saved. Thanks for helping shape Celesto.</p>
-					<div class="pt-3">
-						<button
-							type="button"
-							onclick={() => {
-								dismissed = true;
-							}}
-							class="bg-lavender text-void px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light transition-colors border-2 border-lavender"
-						>
-							Done
-						</button>
-					</div>
-				</div>
-			{:else}
-				<div class="mb-6 space-y-3 text-left pr-10">
-					<p class="font-mono text-xs uppercase tracking-[0.24em] text-lavender">Optional follow-up</p>
-					<h3 class="font-serif text-3xl sm:text-4xl text-parchment leading-tight">A few quick questions so we can build this right</h3>
-					<p class="font-mono text-sm sm:text-base text-stone max-w-2xl">Mostly multiple choice. About 30 seconds. Your email is already saved — this helps us shape the product around what people actually want.</p>
-				</div>
+			<div class="survey-panel brutalist-border relative z-10 animate-fade-in flex flex-col">
+				<div class="survey-glow" aria-hidden="true"></div>
+				<div class="survey-shell flex-1 flex flex-col p-6 pt-16 sm:p-8 sm:pt-20 lg:p-12 lg:pt-24">
+					<button
+						type="button"
+						onclick={() => {
+							dismissed = true;
+						}}
+						class="absolute top-3 right-3 sm:top-5 sm:right-5 text-stone hover:text-parchment transition-colors font-mono text-lg min-w-[44px] min-h-[44px] flex items-center justify-center z-20"
+						aria-label="Close survey"
+					>
+						&times;
+					</button>
 
-				<form onsubmit={handleSubmit} class="space-y-6">
-					{#each waitlistSurveyQuestions as question}
-						<fieldset class="space-y-3">
-							<legend class="font-mono text-sm text-parchment font-semibold">
-								{question.label}
-								{#if question.required}<span class="text-lavender"> *</span>{/if}
-							</legend>
+					{#if status === 'success'}
+						<div class="space-y-2 text-left animate-fade-in pr-10 flex-1 flex flex-col justify-center">
+							<p class="font-mono text-xs uppercase tracking-[0.24em] text-lavender">Thanks — saved</p>
+							<h3 class="font-serif text-2xl text-parchment">We’ll build with this in mind.</h3>
+							<p class="font-mono text-sm text-stone">Your answers are saved. Thanks for helping shape Celesto.</p>
+							<div class="pt-3">
+								<button
+									type="button"
+									onclick={() => {
+										dismissed = true;
+									}}
+									class="bg-lavender text-void px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light transition-colors border-2 border-lavender"
+								>
+									Done
+								</button>
+							</div>
+						</div>
+					{:else}
+						<div class="mb-8 space-y-4 text-left pr-10 shrink-0">
+							<p class="font-mono text-xs uppercase tracking-[0.3em] text-lavender">Optional follow-up</p>
+							<h3 class="font-serif text-3xl sm:text-4xl text-parchment leading-tight">A few quick questions so we can build this right</h3>
+							<p class="font-mono text-sm sm:text-base text-stone max-w-3xl">Mostly multiple choice. About 30 seconds. Your email is already saved. This screen should have your full attention for one moment, then you are done.</p>
+						</div>
 
-							{#if question.description}
-								<p class="font-mono text-xs text-stone">{question.description}</p>
+						<form onsubmit={handleSubmit} class="space-y-6 flex-1 pr-1 survey-form">
+							{#each waitlistSurveyQuestions as question}
+								<fieldset class="space-y-3">
+									<legend class="font-mono text-sm text-parchment font-semibold">
+										{question.label}
+										{#if question.required}<span class="text-lavender"> *</span>{/if}
+									</legend>
+
+									{#if question.description}
+										<p class="font-mono text-xs text-stone">{question.description}</p>
+									{/if}
+
+									{#if question.type === 'single_select'}
+										<div class="grid gap-2">
+											{#each question.options ?? [] as option}
+												<label class="survey-option">
+													<input
+														type="radio"
+														name={question.id}
+														value={option}
+														checked={answers[question.id] === option}
+														onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', option)}
+													/>
+													<span>{option}</span>
+												</label>
+											{/each}
+										</div>
+
+										{#if question.id === 'primary_use_case' && answers.primary_use_case === 'Other'}
+											<textarea
+												bind:value={answers.primary_use_case_other}
+												rows="3"
+												placeholder="Tell us what you'd use it for"
+												class="survey-textarea"
+											></textarea>
+										{/if}
+									{:else if question.type === 'multi_select'}
+										<div class="grid gap-2">
+											{#each question.options ?? [] as option}
+												<label class="survey-option">
+													<input
+														type="checkbox"
+														checked={answers.important_features.includes(option)}
+														onchange={(event) => toggleFeature(option, (event.currentTarget as HTMLInputElement).checked)}
+													/>
+													<span>{option}</span>
+												</label>
+											{/each}
+										</div>
+									{:else}
+										<textarea
+											bind:value={answers.value_definition}
+											rows="4"
+											placeholder={question.placeholder}
+											class="survey-textarea"
+										></textarea>
+									{/if}
+								</fieldset>
+							{/each}
+
+							{#if status === 'error'}
+								<p class="font-mono text-xs text-red-400">{errorMessage}</p>
 							{/if}
 
-							{#if question.type === 'single_select'}
-								<div class="grid gap-2">
-									{#each question.options ?? [] as option}
-										<label class="survey-option">
-											<input
-												type="radio"
-												name={question.id}
-												value={option}
-												checked={answers[question.id] === option}
-												onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', option)}
-											/>
-											<span>{option}</span>
-										</label>
-									{/each}
-								</div>
-
-								{#if question.id === 'primary_use_case' && answers.primary_use_case === 'Other'}
-									<textarea
-										bind:value={answers.primary_use_case_other}
-										rows="3"
-										placeholder="Tell us what you'd use it for"
-										class="survey-textarea"
-									></textarea>
-								{/if}
-							{:else if question.type === 'multi_select'}
-								<div class="grid gap-2">
-									{#each question.options ?? [] as option}
-										<label class="survey-option">
-											<input
-												type="checkbox"
-												checked={answers.important_features.includes(option)}
-												onchange={(event) => toggleFeature(option, (event.currentTarget as HTMLInputElement).checked)}
-											/>
-											<span>{option}</span>
-										</label>
-									{/each}
-								</div>
-							{:else}
-								<textarea
-									bind:value={answers.value_definition}
-									rows="4"
-									placeholder={question.placeholder}
-									class="survey-textarea"
-								></textarea>
-							{/if}
-						</fieldset>
-					{/each}
-
-					{#if status === 'error'}
-						<p class="font-mono text-xs text-red-400">{errorMessage}</p>
+							<div class="flex flex-col sm:flex-row gap-3 sm:items-center pb-6 sm:pb-8">
+								<button
+									type="submit"
+									disabled={status === 'loading'}
+									class="bg-lavender text-void px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
+								>
+									{status === 'loading' ? 'Saving...' : 'Save my answers'}
+								</button>
+								<button
+									type="button"
+									onclick={() => {
+										dismissed = true;
+									}}
+									class="font-mono text-xs uppercase tracking-[0.2em] text-stone hover:text-parchment transition-colors"
+								>
+									Skip for now
+								</button>
+							</div>
+						</form>
 					{/if}
-
-					<div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-						<button
-							type="submit"
-							disabled={status === 'loading'}
-							class="bg-lavender text-void px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:bg-lavender-light disabled:opacity-50 transition-colors border-2 border-lavender"
-						>
-							{status === 'loading' ? 'Saving...' : 'Save my answers'}
-						</button>
-						<button
-							type="button"
-							onclick={() => {
-								dismissed = true;
-							}}
-							class="font-mono text-xs uppercase tracking-[0.2em] text-stone hover:text-parchment transition-colors"
-						>
-							Skip for now
-						</button>
-					</div>
-				</form>
-			{/if}
-		</div>
+				</div>
+			</div>
 	</div>
 {/if}
 
@@ -220,18 +235,22 @@
 	.survey-modal {
 		position: fixed;
 		inset: 0;
-		z-index: 100;
+		z-index: 100000;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1rem;
+		padding: 0;
+		isolation: isolate;
+		overflow-y: auto;
 	}
 
 	.survey-backdrop {
 		position: absolute;
 		inset: 0;
-		background: rgba(6, 6, 10, 0.92);
-		backdrop-filter: blur(12px);
+		background:
+			radial-gradient(circle at top, rgba(184, 169, 232, 0.14), transparent 34%),
+			linear-gradient(180deg, rgba(4, 4, 8, 0.92) 0%, rgba(4, 4, 8, 0.98) 100%);
+		backdrop-filter: blur(18px);
 		border: 0;
 		padding: 0;
 		cursor: pointer;
@@ -239,17 +258,57 @@
 
 	.survey-panel {
 		position: relative;
-		border-width: 2px;
+		width: min(100vw, 1440px);
+		min-height: 100dvh;
+		max-height: 100dvh;
+		border-width: 0;
+		background:
+			linear-gradient(135deg, rgba(184, 169, 232, 0.08), transparent 24%),
+			linear-gradient(180deg, rgba(15, 15, 22, 0.995) 0%, rgba(7, 7, 12, 1) 100%);
 		box-shadow:
-			0 30px 120px rgba(0, 0, 0, 0.58),
-			0 0 0 1px rgba(184, 169, 232, 0.08);
+			0 0 0 1px rgba(184, 169, 232, 0.14),
+			0 40px 160px rgba(0, 0, 0, 0.66);
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+
+	.survey-panel::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(245, 239, 230, 0.04) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(245, 239, 230, 0.04) 1px, transparent 1px);
+		background-size: 32px 32px;
+		mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7));
+		pointer-events: none;
+	}
+
+	.survey-glow {
+		position: absolute;
+		inset: -20% auto auto 8%;
+		width: min(38rem, 52vw);
+		aspect-ratio: 1;
+		border-radius: 9999px;
+		background: radial-gradient(circle, rgba(184, 169, 232, 0.18) 0%, rgba(184, 169, 232, 0.06) 34%, transparent 70%);
+		filter: blur(28px);
+		pointer-events: none;
+	}
+
+	.survey-shell {
+		position: relative;
+		z-index: 1;
+		max-width: 1200px;
+		width: 100%;
+		margin: 0 auto;
+		min-height: 100%;
 	}
 
 	.survey-option {
 		display: flex;
 		align-items: flex-start;
 		gap: 0.75rem;
-		padding: 0.875rem 1rem;
+		padding: 1rem 1.1rem;
 		border: 1px solid rgba(245, 239, 230, 0.16);
 		background: rgba(255, 255, 255, 0.02);
 		font-family: var(--font-mono);
@@ -271,9 +330,9 @@
 
 	.survey-textarea {
 		width: 100%;
-		background: var(--color-void-surface);
+		background: rgba(255, 255, 255, 0.02);
 		border: 2px solid var(--color-parchment);
-		padding: 0.875rem 1rem;
+		padding: 1rem 1.1rem;
 		font-family: var(--font-mono);
 		font-size: 0.8rem;
 		color: var(--color-parchment);
@@ -285,5 +344,19 @@
 		outline: none;
 		border-color: var(--color-lavender);
 		box-shadow: 0 0 0 2px rgba(184, 169, 232, 0.25);
+	}
+
+	.survey-form {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(184, 169, 232, 0.6) rgba(255, 255, 255, 0.05);
+	}
+
+	@media (min-width: 900px) {
+		.survey-panel {
+			width: min(calc(100vw - 32px), 1480px);
+			min-height: min(calc(100dvh - 32px), 980px);
+			max-height: min(calc(100dvh - 32px), 980px);
+			border-width: 2px;
+		}
 	}
 </style>
