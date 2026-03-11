@@ -60,10 +60,11 @@
 		}
 	}
 
-	function toggleFeature(feature: string, checked: boolean) {
-		answers.important_features = checked
-			? [...answers.important_features, feature]
-			: answers.important_features.filter((item) => item !== feature);
+	function toggleMultiSelectAnswer(questionId: 'astrology_apps_used' | 'important_features', option: string, checked: boolean) {
+		const currentValues = answers[questionId];
+		answers[questionId] = checked
+			? [...currentValues, option]
+			: currentValues.filter((item) => item !== option);
 	}
 
 	function setSingleSelectAnswer(questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', value: string) {
@@ -191,16 +192,25 @@
 									{:else if question.type === 'multi_select'}
 										<div class="grid gap-2">
 											{#each question.options ?? [] as option}
-												<label class:selected={answers.important_features.includes(option)} class="survey-option">
+												<label class:selected={answers[question.id].includes(option)} class="survey-option">
 													<input
 														type="checkbox"
-														checked={answers.important_features.includes(option)}
-														onchange={(event) => toggleFeature(option, (event.currentTarget as HTMLInputElement).checked)}
+														checked={answers[question.id].includes(option)}
+														onchange={(event) => toggleMultiSelectAnswer(question.id as 'astrology_apps_used' | 'important_features', option, (event.currentTarget as HTMLInputElement).checked)}
 													/>
 													<span>{option}</span>
 												</label>
 											{/each}
 										</div>
+
+										{#if question.id === 'astrology_apps_used' && answers.astrology_apps_used.includes('Other')}
+											<textarea
+												bind:value={answers.astrology_apps_used_other}
+												rows="3"
+												placeholder="Tell us which astrology apps you've used"
+												class="survey-textarea"
+											></textarea>
+										{/if}
 									{:else}
 										<textarea
 											bind:value={answers.value_definition}

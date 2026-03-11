@@ -11,6 +11,8 @@ export interface SurveyQuestion {
 }
 
 export interface WaitlistSurveyAnswers {
+	astrology_apps_used: string[];
+	astrology_apps_used_other: string;
 	primary_use_case: string;
 	primary_use_case_other: string;
 	biggest_pain_point: string;
@@ -21,6 +23,24 @@ export interface WaitlistSurveyAnswers {
 }
 
 export const waitlistSurveyQuestions: SurveyQuestion[] = [
+	{
+		id: 'astrology_apps_used',
+		label: 'Have you used astrology apps before?',
+		type: 'multi_select',
+		required: false,
+		description: "Select any you've tried.",
+		options: [
+			'Co-Star',
+			'The Pattern',
+			'CHANI',
+			'Sanctuary',
+			'TimePassages',
+			'Nebula',
+			'Astrology Zone',
+			'No, this is my first astrology app',
+			'Other'
+		]
+	},
 	{
 		id: 'primary_use_case',
 		label: 'What would you want to use Celesto for most?',
@@ -114,6 +134,8 @@ function normalizeStringArray(value: unknown) {
 
 export function getEmptyWaitlistSurveyAnswers(): WaitlistSurveyAnswers {
 	return {
+		astrology_apps_used: [],
+		astrology_apps_used_other: '',
 		primary_use_case: '',
 		primary_use_case_other: '',
 		biggest_pain_point: '',
@@ -132,6 +154,8 @@ export function validateWaitlistSurveyAnswers(raw: unknown):
 	}
 
 	const answers: WaitlistSurveyAnswers = {
+		astrology_apps_used: normalizeStringArray(raw.astrology_apps_used),
+		astrology_apps_used_other: normalizeString(raw.astrology_apps_used_other),
 		primary_use_case: normalizeString(raw.primary_use_case),
 		primary_use_case_other: normalizeString(raw.primary_use_case_other),
 		biggest_pain_point: normalizeString(raw.biggest_pain_point),
@@ -171,6 +195,10 @@ export function validateWaitlistSurveyAnswers(raw: unknown):
 
 	if (answers.primary_use_case !== 'Other') {
 		answers.primary_use_case_other = '';
+	}
+
+	if (!answers.astrology_apps_used.includes('Other')) {
+		answers.astrology_apps_used_other = '';
 	}
 
 	return { valid: true, answers };
