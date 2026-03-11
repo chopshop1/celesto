@@ -1,0 +1,95 @@
+{
+  "generatedAt": "2026-03-11T19:18:32.057Z",
+  "totalResponses": 18,
+  "questions": {
+    "astrology_apps_used": {
+      "question": "Have you used astrology apps before?",
+      "type": "multi_select",
+      "totalAnswered": 5,
+      "answers": {
+        "Nebula": 3,
+        "No, this is my first astrology app": 2
+      }
+    },
+    "primary_use_case": {
+      "question": "What would you want to use Celesto for most?",
+      "type": "single_select",
+      "totalAnswered": 18,
+      "answers": {
+        "Relationship compatibility": 7,
+        "Understanding my birth chart": 5,
+        "Timing big life decisions": 3,
+        "Daily horoscope guidance": 1,
+        "Other": 1,
+        "Other: Want to know about my love life": 1,
+        "Career and money insights": 1
+      }
+    },
+    "biggest_pain_point": {
+      "question": "What's your biggest frustration with astrology apps today?",
+      "type": "single_select",
+      "totalAnswered": 18,
+      "answers": {
+        "Feels inaccurate": 4,
+        "Doesn't help with real-life decisions": 3,
+        "Too confusing / hard to understand": 3,
+        "Too expensive": 3,
+        "I haven't found one I like yet": 3,
+        "Too generic": 2
+      }
+    },
+    "important_features": {
+      "question": "Which features would matter most to you?",
+      "type": "multi_select",
+      "totalAnswered": 18,
+      "answers": {
+        "Relationship / compatibility readings": 11,
+        "Personalized birth chart reading": 8,
+        "Calendar timing for important days": 3,
+        "Journaling / reflection prompts": 2,
+        "Daily horoscope based on my chart": 2,
+        "Transit explanations in plain English": 2,
+        "AI chat for astrology questions": 2,
+        "Rituals or action steps": 2,
+        "Weekly planning insights": 2,
+        "Voice-based guidance": 1
+      }
+    },
+    "usage_frequency": {
+      "question": "How often would you use something like this?",
+      "type": "single_select",
+      "totalAnswered": 18,
+      "answers": {
+        "A few times a week": 8,
+        "Weekly": 3,
+        "Daily": 3,
+        "Multiple times a day": 2,
+        "Only during big life moments": 2
+      }
+    },
+    "astrology_familiarity": {
+      "question": "How familiar are you with astrology already?",
+      "type": "single_select",
+      "totalAnswered": 18,
+      "answers": {
+        "I'm totally new to it": 10,
+        "I know my sun sign and basics": 6,
+        "I know my birth chart fairly well": 1,
+        "I'm very into astrology / advanced": 1
+      }
+    },
+    "value_definition": {
+      "question": "What would make Celesto feel truly valuable to you?",
+      "type": "long_text",
+      "totalAnswered": 6,
+      "answers": {
+        "Better explanation with timing and guidance": 1,
+        "Relationships career anxiety": 1,
+        "I don't know": 1,
+        "More clarity, guidance regarding career, love life etc": 1,
+        "More clarity": 1,
+        "Better relationship": 1
+      }
+    }
+  }
+}
