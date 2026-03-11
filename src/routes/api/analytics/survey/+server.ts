@@ -4,24 +4,14 @@ import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
 import { waitlistSurveyResponses } from '$lib/server/db/schema';
 import { waitlistSurveyQuestions, type WaitlistSurveyAnswers } from '$lib/waitlist-survey';
+import {
+	createSessionToken,
+	validateSessionToken,
+	setSessionCookie,
+	COOKIE_NAME
+} from '$lib/server/analytics-auth';
 
-export const POST: RequestHandler = async ({ request }) => {
-	let body: { password?: string };
-
-	try {
-		body = await request.json();
-	} catch {
-		return json({ error: 'Invalid JSON body' }, { status: 400 });
-	}
-
-	if (!body.password || body.password !== env.ANALYTICS_PASSWORD) {
-		return json({ error: 'Unauthorized' }, { status: 401 });
-	}
-
-	const rows = await db
-		.select({ answers: waitlistSurveyResponses.answers })
-		.from(waitlistSurveyResponses);
-
+function buildMetrics(rows: { answers: unknown }[]) {
 	const totalResponses = rows.length;
 
 	const metrics: Record<
@@ -80,7 +70,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	}
 
-	// Sort answers by count descending
 	for (const key of Object.keys(metrics)) {
 		const sorted = Object.entries(metrics[key].answers)
 			.sort(([, a], [, b]) => b - a)
@@ -91,9 +80,46 @@ export const POST: RequestHandler = async ({ request }) => {
 		metrics[key].answers = sorted;
 	}
 
-	return json({
-		generatedAt: new Date().toISOString(),
-		totalResponses,
-		questions: metrics
+	return { generatedAt: new Date().toISOString(), totalResponses, questions: metrics };
+}
+
+/** GET — uses session cookie for auth */
+export const GET: RequestHandler = async ({ cookies }) => {
+	const token = cookies.get(COOKIE_NAME);
+	if (!token || !env.ANALYTICS_PASSWORD || !(await validateSessionToken(token, env.ANALYTICS_PASSWORD))) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	const rows = await db
+		.select({ answers: waitlistSurveyResponses.answers })
+		.from(waitlistSurveyResponses);
+
+	return json(buildMetrics(rows));
+};
+
+/** POST — password login, sets session cookie */
+export const POST: RequestHandler = async ({ request }) => {
+	let body: { password?: string };
+
+	try {
+		body = await request.json();
+	} catch {
+		return json({ error: 'Invalid JSON body' }, { status: 400 });
+	}
+
+	if (!body.password || !env.ANALYTICS_PASSWORD || body.password !== env.ANALYTICS_PASSWORD) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	const rows = await db
+		.select({ answers: waitlistSurveyResponses.answers })
+		.from(waitlistSurveyResponses);
+
+	const token = await createSessionToken(env.ANALYTICS_PASSWORD);
+
+	return json(buildMetrics(rows), {
+		headers: {
+			'Set-Cookie': setSessionCookie(token)
+		}
 	});
 };

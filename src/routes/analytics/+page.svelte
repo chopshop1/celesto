@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let password = $state('');
 	let error = $state('');
 	let loading = $state(false);
+	let checking = $state(true);
 	let data = $state<null | {
 		generatedAt: string;
 		totalResponses: number;
@@ -12,6 +15,20 @@
 			answers: Record<string, number>;
 		}>;
 	}>(null);
+
+	onMount(async () => {
+		// Check if already authed via session cookie
+		try {
+			const res = await fetch('/api/analytics/survey');
+			if (res.ok) {
+				data = await res.json();
+			}
+		} catch {
+			// not authed, show password form
+		} finally {
+			checking = false;
+		}
+	});
 
 	async function unlock() {
 		if (!password.trim()) {
@@ -37,11 +54,17 @@
 			}
 
 			data = await res.json();
+			password = '';
 		} catch {
 			error = 'Failed to fetch data';
 		} finally {
 			loading = false;
 		}
+	}
+
+	function lock() {
+		data = null;
+		password = '';
 	}
 
 	function getBarWidth(count: number, max: number) {
@@ -60,7 +83,12 @@
 </svelte:head>
 
 <div class="min-h-screen bg-void text-parchment px-4 py-12 font-mono">
-	{#if !data}
+	{#if checking}
+		<!-- Loading state while checking session -->
+		<div class="max-w-sm mx-auto mt-32 text-center">
+			<p class="text-stone">Checking session...</p>
+		</div>
+	{:else if !data}
 		<!-- Password Gate -->
 		<div class="max-w-sm mx-auto mt-32">
 			<h1 class="text-xl font-serif font-bold text-center mb-8 text-lavender">Analytics</h1>
@@ -69,6 +97,7 @@
 					type="password"
 					bind:value={password}
 					placeholder="Enter password"
+					autocomplete="off"
 					class="w-full bg-void-surface border border-void-border rounded-lg px-4 py-3 text-parchment placeholder:text-stone focus:outline-none focus:border-lavender transition-colors"
 				/>
 				{#if error}
@@ -89,7 +118,7 @@
 			<div class="flex items-center justify-between mb-10">
 				<h1 class="text-2xl font-serif font-bold text-lavender">Survey Analytics</h1>
 				<button
-					onclick={() => { data = null; password = ''; }}
+					onclick={lock}
 					class="text-stone text-sm hover:text-parchment transition-colors"
 				>
 					Lock
