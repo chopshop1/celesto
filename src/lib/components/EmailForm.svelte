@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { setWaitlistEmail } from '$lib/stores/waitlist-email.svelte';
+	import WaitlistSurvey from './WaitlistSurvey.svelte';
 
 	interface Props {
 		id?: string;
@@ -16,6 +17,8 @@
 	let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
 	let errorMessage = $state('');
 	let waitlistPosition = $state<number | null>(null);
+	let submittedEmail = $state('');
+	let waitlistId = $state<number | null>(null);
 	let turnstileToken = $state('');
 	let turnstileEl: HTMLDivElement | undefined = $state();
 	let widgetId = $state<string | undefined>(undefined);
@@ -33,8 +36,7 @@
 						turnstileToken = token;
 					},
 					theme: 'dark',
-					size: 'compact',
-					appearance: 'interaction-only'
+					size: 'compact'
 				});
 			} else {
 				timer = setTimeout(tryRender, 200);
@@ -68,7 +70,9 @@
 			const data = await res.json();
 
 			if (res.ok) {
-				setWaitlistEmail(email);
+				submittedEmail = data.email ?? email;
+				waitlistId = data.id ?? null;
+				setWaitlistEmail(submittedEmail);
 				waitlistPosition = data.position ?? null;
 				status = 'success';
 				email = '';
@@ -91,17 +95,23 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-3 w-full max-w-md" {id}>
+<form onsubmit={handleSubmit} class="flex flex-col gap-3 w-full max-w-2xl" {id}>
 	<div class="hp-field" aria-hidden="true">
 		<label for="{id}-hp">Website</label>
 		<input type="text" id="{id}-hp" name="website" bind:value={website} tabindex="-1" autocomplete="off" />
 	</div>
 
 	{#if status === 'success'}
-		<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
-			<p class="text-lavender font-mono text-sm font-semibold">
-				{#if waitlistPosition}You're #{waitlistPosition} on the waitlist. Check your email.{:else}You're on the waitlist. Check your email.{/if}
-			</p>
+		<div class="w-full max-w-2xl">
+			<div class="brutalist-border-lavender p-4 text-center animate-fade-in">
+				<p class="text-lavender font-mono text-sm font-semibold">
+					{#if waitlistPosition}You're #{waitlistPosition} on the waitlist. Check your email.{:else}You're on the waitlist. Check your email.{/if}
+				</p>
+			</div>
+
+			{#if waitlistId && submittedEmail}
+				<WaitlistSurvey waitlistId={waitlistId} email={submittedEmail} />
+			{/if}
 		</div>
 	{:else}
 		<div class="flex flex-col sm:flex-row gap-2">

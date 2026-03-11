@@ -35,7 +35,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			app: 'celesto'
 		}).returning();
 
-		return json({ success: true, id: result[0].id }, { status: 201 });
+		return json({ success: true, id: result[0].id, email: validation.email }, { status: 201 });
 	} catch (err: unknown) {
 		if (err && typeof err === 'object' && 'code' in err && err.code === '23505') {
 			return json({ error: 'Email already registered' }, { status: 409 });
