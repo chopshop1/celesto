@@ -19,6 +19,7 @@ export interface WaitlistSurveyAnswers {
 	important_features: string[];
 	usage_frequency: string;
 	astrology_familiarity: string;
+	monthly_price_expectation: string;
 	value_definition: string;
 }
 
@@ -110,6 +111,13 @@ export const waitlistSurveyQuestions: SurveyQuestion[] = [
 		]
 	},
 	{
+		id: 'monthly_price_expectation',
+		label: 'What would you be willing to pay monthly for a service like this?',
+		type: 'single_select',
+		required: true,
+		options: ['Free only', 'Under $10/month', '$10–$20/month', '$20–$40/month', '$40+/month']
+	},
+	{
 		id: 'value_definition',
 		label: 'What would make Celesto feel truly valuable to you?',
 		type: 'long_text',
@@ -142,6 +150,7 @@ export function getEmptyWaitlistSurveyAnswers(): WaitlistSurveyAnswers {
 		important_features: [],
 		usage_frequency: '',
 		astrology_familiarity: '',
+		monthly_price_expectation: '',
 		value_definition: ''
 	};
 }
@@ -162,6 +171,7 @@ export function validateWaitlistSurveyAnswers(raw: unknown):
 		important_features: normalizeStringArray(raw.important_features),
 		usage_frequency: normalizeString(raw.usage_frequency),
 		astrology_familiarity: normalizeString(raw.astrology_familiarity),
+		monthly_price_expectation: normalizeString(raw.monthly_price_expectation),
 		value_definition: normalizeString(raw.value_definition)
 	};
 

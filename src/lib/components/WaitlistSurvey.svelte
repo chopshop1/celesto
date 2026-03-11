@@ -67,7 +67,10 @@
 			: currentValues.filter((item) => item !== option);
 	}
 
-	function setSingleSelectAnswer(questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', value: string) {
+	function setSingleSelectAnswer(
+		questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'monthly_price_expectation',
+		value: string
+	) {
 		answers[questionId] = value;
 	}
 
@@ -174,7 +177,7 @@
 														name={question.id}
 														value={option}
 														checked={answers[question.id] === option}
-														onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', option)}
+														onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'monthly_price_expectation', option)}
 													/>
 													<span>{option}</span>
 												</label>
