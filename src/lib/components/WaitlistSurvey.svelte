@@ -68,10 +68,14 @@
 	}
 
 	function setSingleSelectAnswer(
-		questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'monthly_price_expectation',
+		questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'has_paid_before' | 'monthly_price_expectation',
 		value: string
 	) {
 		answers[questionId] = value;
+		// Clear the price answer when user switches to "No"
+		if (questionId === 'has_paid_before' && value !== 'Yes') {
+			answers.monthly_price_expectation = '';
+		}
 	}
 
 	function portal(node: HTMLElement) {
@@ -158,6 +162,7 @@
 
 						<form onsubmit={handleSubmit} class="space-y-6 flex-1 pr-1 survey-form">
 							{#each waitlistSurveyQuestions as question}
+								{#if question.id !== 'monthly_price_expectation' || answers.has_paid_before === 'Yes'}
 								<fieldset class="space-y-3">
 									<legend class="font-mono text-sm text-parchment font-semibold">
 										{question.label}
@@ -177,7 +182,7 @@
 														name={question.id}
 														value={option}
 														checked={answers[question.id] === option}
-														onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'monthly_price_expectation', option)}
+														onchange={() => setSingleSelectAnswer(question.id as 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity' | 'has_paid_before' | 'monthly_price_expectation', option)}
 													/>
 													<span>{option}</span>
 												</label>
@@ -223,6 +228,7 @@
 										></textarea>
 									{/if}
 								</fieldset>
+								{/if}
 							{/each}
 
 							{#if status === 'error'}

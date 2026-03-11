@@ -19,6 +19,7 @@ export interface WaitlistSurveyAnswers {
 	important_features: string[];
 	usage_frequency: string;
 	astrology_familiarity: string;
+	has_paid_before: string;
 	monthly_price_expectation: string;
 	value_definition: string;
 }
@@ -111,11 +112,18 @@ export const waitlistSurveyQuestions: SurveyQuestion[] = [
 		]
 	},
 	{
+		id: 'has_paid_before',
+		label: 'Have you ever paid for a service like this before?',
+		type: 'single_select',
+		required: true,
+		options: ['Yes', 'No']
+	},
+	{
 		id: 'monthly_price_expectation',
 		label: 'What would you be willing to pay monthly for a service like this?',
 		type: 'single_select',
-		required: true,
-		options: ['Free only', 'Under $10/month', '$10–$20/month', '$20–$40/month', '$40+/month']
+		required: false,
+		options: ['Under $10/month', '$10–$20/month', '$20–$40/month', '$40+/month']
 	},
 	{
 		id: 'value_definition',
@@ -150,6 +158,7 @@ export function getEmptyWaitlistSurveyAnswers(): WaitlistSurveyAnswers {
 		important_features: [],
 		usage_frequency: '',
 		astrology_familiarity: '',
+		has_paid_before: '',
 		monthly_price_expectation: '',
 		value_definition: ''
 	};
@@ -171,11 +180,22 @@ export function validateWaitlistSurveyAnswers(raw: unknown):
 		important_features: normalizeStringArray(raw.important_features),
 		usage_frequency: normalizeString(raw.usage_frequency),
 		astrology_familiarity: normalizeString(raw.astrology_familiarity),
+		has_paid_before: normalizeString(raw.has_paid_before),
 		monthly_price_expectation: normalizeString(raw.monthly_price_expectation),
 		value_definition: normalizeString(raw.value_definition)
 	};
 
+	// If user has not paid before, clear and skip the price question
+	if (answers.has_paid_before !== 'Yes') {
+		answers.monthly_price_expectation = '';
+	}
+
 	for (const question of waitlistSurveyQuestions) {
+		// Skip monthly_price_expectation validation when user hasn't paid before
+		if (question.id === 'monthly_price_expectation' && answers.has_paid_before !== 'Yes') {
+			continue;
+		}
+
 		if (question.type === 'single_select') {
 			const value = answers[question.id];
 			if (typeof value !== 'string') {
