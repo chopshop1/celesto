@@ -6,6 +6,7 @@
 		type WaitlistSurveyAnswers
 	} from '$lib/waitlist-survey';
 	import { browser } from '$app/environment';
+	import DiscordIcon from './DiscordIcon.svelte';
 
 	interface Props {
 		waitlistId?: number | null;
@@ -123,7 +124,16 @@
 							<p class="font-mono text-xs uppercase tracking-[0.24em] text-lavender">Thanks — saved</p>
 							<h3 class="font-serif text-2xl text-parchment">We’ll build with this in mind.</h3>
 							<p class="font-mono text-sm text-stone">Your answers are saved. Thanks for helping shape Celesto.</p>
-							<div class="pt-3">
+							<div class="pt-3 flex flex-col sm:flex-row gap-3">
+								<a
+									href="https://discord.gg/gpjt2cqP"
+									target="_blank"
+									rel="noreferrer"
+									class="inline-flex items-center justify-center gap-2 border-2 border-parchment/30 text-parchment px-5 py-3 font-mono text-sm font-semibold uppercase tracking-widest hover:border-lavender hover:text-lavender transition-colors"
+								>
+									<DiscordIcon class="w-4 h-4" />
+									Join Our Discord
+								</a>
 								<button
 									type="button"
 									onclick={() => {
@@ -157,7 +167,7 @@
 									{#if question.type === 'single_select'}
 										<div class="grid gap-2">
 											{#each question.options ?? [] as option}
-												<label class="survey-option">
+												<label class:selected={answers[question.id] === option} class="survey-option">
 													<input
 														type="radio"
 														name={question.id}
@@ -181,7 +191,7 @@
 									{:else if question.type === 'multi_select'}
 										<div class="grid gap-2">
 											{#each question.options ?? [] as option}
-												<label class="survey-option">
+												<label class:selected={answers.important_features.includes(option)} class="survey-option">
 													<input
 														type="checkbox"
 														checked={answers.important_features.includes(option)}
@@ -323,9 +333,27 @@
 		background: rgba(184, 169, 232, 0.05);
 	}
 
+	.survey-option.selected {
+		border-color: rgba(184, 169, 232, 0.88);
+		background: linear-gradient(180deg, rgba(184, 169, 232, 0.16) 0%, rgba(184, 169, 232, 0.08) 100%);
+		box-shadow:
+			inset 0 0 0 1px rgba(184, 169, 232, 0.32),
+			0 0 0 1px rgba(184, 169, 232, 0.2);
+	}
+
+	.survey-option.selected span {
+		color: var(--color-parchment);
+		font-weight: 600;
+	}
+
 	.survey-option input {
 		margin-top: 0.125rem;
 		accent-color: var(--color-lavender);
+		transform: scale(1.1);
+	}
+
+	.survey-option input:checked {
+		filter: drop-shadow(0 0 6px rgba(184, 169, 232, 0.7));
 	}
 
 	.survey-textarea {
