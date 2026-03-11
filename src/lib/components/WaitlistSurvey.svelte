@@ -5,6 +5,7 @@
 		waitlistSurveyQuestions,
 		type WaitlistSurveyAnswers
 	} from '$lib/waitlist-survey';
+	import { browser } from '$app/environment';
 
 	interface Props {
 		waitlistId: number;
@@ -67,6 +68,17 @@
 	function setSingleSelectAnswer(questionId: 'primary_use_case' | 'biggest_pain_point' | 'usage_frequency' | 'astrology_familiarity', value: string) {
 		answers[questionId] = value;
 	}
+
+	$effect(() => {
+		if (!browser || dismissed) return;
+
+		const previousOverflow = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+
+		return () => {
+			document.body.style.overflow = previousOverflow;
+		};
+	});
 </script>
 
 {#if !dismissed}
@@ -80,7 +92,7 @@
 			}}
 		></button>
 
-		<div class="survey-panel brutalist-border bg-void-surface/95 p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative z-10 animate-fade-in">
+		<div class="survey-panel brutalist-border bg-void-surface/95 p-6 sm:p-8 w-full max-w-4xl max-h-[92vh] overflow-y-auto relative z-10 animate-fade-in">
 			<button
 				type="button"
 				onclick={() => {
@@ -110,10 +122,10 @@
 					</div>
 				</div>
 			{:else}
-				<div class="mb-5 space-y-2 text-left pr-10">
+				<div class="mb-6 space-y-3 text-left pr-10">
 					<p class="font-mono text-xs uppercase tracking-[0.24em] text-lavender">Optional follow-up</p>
-					<h3 class="font-serif text-2xl text-parchment">A few quick questions so we can build this right</h3>
-					<p class="font-mono text-sm text-stone">Mostly multiple choice. About 30 seconds.</p>
+					<h3 class="font-serif text-3xl sm:text-4xl text-parchment leading-tight">A few quick questions so we can build this right</h3>
+					<p class="font-mono text-sm sm:text-base text-stone max-w-2xl">Mostly multiple choice. About 30 seconds. Your email is already saved — this helps us shape the product around what people actually want.</p>
 				</div>
 
 				<form onsubmit={handleSubmit} class="space-y-6">
@@ -208,7 +220,7 @@
 	.survey-modal {
 		position: fixed;
 		inset: 0;
-		z-index: 80;
+		z-index: 100;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -218,8 +230,8 @@
 	.survey-backdrop {
 		position: absolute;
 		inset: 0;
-		background: rgba(10, 10, 15, 0.82);
-		backdrop-filter: blur(8px);
+		background: rgba(6, 6, 10, 0.92);
+		backdrop-filter: blur(12px);
 		border: 0;
 		padding: 0;
 		cursor: pointer;
@@ -227,7 +239,10 @@
 
 	.survey-panel {
 		position: relative;
-		box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+		border-width: 2px;
+		box-shadow:
+			0 30px 120px rgba(0, 0, 0, 0.58),
+			0 0 0 1px rgba(184, 169, 232, 0.08);
 	}
 
 	.survey-option {
