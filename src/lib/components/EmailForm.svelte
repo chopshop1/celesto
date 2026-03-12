@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { setWaitlistEmail } from '$lib/stores/waitlist-email.svelte';
+	import { getAttribution, clearAttribution } from '$lib/attribution';
 	import WaitlistSurvey from './WaitlistSurvey.svelte';
 
 	interface Props {
@@ -64,7 +65,9 @@
 					email,
 					referralSource,
 					turnstileToken,
-					website
+					website,
+					// Include stored ad attribution data (first-touch) with signup
+					attribution: getAttribution()
 				})
 			});
 
@@ -77,6 +80,9 @@
 				waitlistPosition = data.position ?? null;
 				status = 'success';
 				email = '';
+				// Clear stored attribution after successful signup
+				clearAttribution();
+				// Fire Meta CompleteRegistration conversion event
 				if (typeof window !== 'undefined' && window.fbq) {
 					window.fbq('track', 'CompleteRegistration');
 				}

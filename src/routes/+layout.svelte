@@ -9,6 +9,13 @@
 	import "@fontsource/jetbrains-mono/600.css";
 	import "../app.css";
 	import Navbar from '$lib/components/Navbar.svelte';
+	import { captureAttribution } from '$lib/attribution';
+	import { onMount } from 'svelte';
+
+	// Capture ad attribution params (fbclid, UTMs, etc.) on first landing
+	onMount(() => {
+		captureAttribution();
+	});
 </script>
 
 <svelte:head>

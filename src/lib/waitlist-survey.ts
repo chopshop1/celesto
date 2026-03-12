@@ -123,7 +123,7 @@ export const waitlistSurveyQuestions: SurveyQuestion[] = [
 		label: 'What would you be willing to pay monthly for a service like this?',
 		type: 'single_select',
 		required: false,
-		options: ['Under $10/month', '$10–$20/month', '$20–$40/month', '$40+/month']
+		options: ['Under $5/month', '$5–$10/month', '$10–$20/month', '$20–$40/month', '$40+/month']
 	},
 	{
 		id: 'value_definition',
