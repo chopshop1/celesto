@@ -84,6 +84,23 @@
 		password = '';
 	}
 
+	const barColors = [
+		'#a78bfa', // lavender
+		'#f472b6', // pink
+		'#34d399', // emerald
+		'#fbbf24', // amber
+		'#60a5fa', // blue
+		'#fb923c', // orange
+		'#c084fc', // purple
+		'#2dd4bf', // teal
+		'#f87171', // red
+		'#a3e635', // lime
+	];
+
+	function getBarColor(index: number) {
+		return barColors[index % barColors.length];
+	}
+
 	function getBarWidth(count: number, max: number) {
 		return max > 0 ? (count / max) * 100 : 0;
 	}
@@ -184,16 +201,19 @@
 						<!-- Bar chart for select questions -->
 						{@const max = getMaxCount(q.answers)}
 						<div class="flex flex-col gap-2.5">
-							{#each Object.entries(q.answers) as [answer, count]}
+							{#each Object.entries(q.answers) as [answer, count], i}
 								<div>
 									<div class="flex items-center justify-between text-sm mb-1">
-										<span class="text-parchment-dark truncate mr-3">{answer}</span>
+										<div class="flex items-center gap-2 truncate mr-3">
+											<span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background: {getBarColor(i)}"></span>
+											<span class="text-parchment-dark truncate">{answer}</span>
+										</div>
 										<span class="text-stone whitespace-nowrap">{count} <span class="text-xs">({Math.round((count / q.totalAnswered) * 100)}%)</span></span>
 									</div>
 									<div class="h-2 bg-void rounded-full overflow-hidden">
 										<div
-											class="h-full bg-lavender rounded-full transition-all"
-											style="width: {getBarWidth(count, max)}%"
+											class="h-full rounded-full transition-all"
+											style="width: {getBarWidth(count, max)}%; background: {getBarColor(i)}"
 										></div>
 									</div>
 								</div>
