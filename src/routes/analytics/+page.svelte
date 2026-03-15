@@ -6,14 +6,16 @@
 	let loading = $state(false);
 	let checking = $state(true);
 	let paidOnly = $state(false);
+	type AnswerEntry = { count: number; byPriceTier: Record<string, number> };
 	let data = $state<null | {
 		generatedAt: string;
 		totalResponses: number;
+		priceTiers: string[];
 		questions: Record<string, {
 			question: string;
 			type: string;
 			totalAnswered: number;
-			answers: Record<string, number>;
+			answers: Record<string, AnswerEntry>;
 		}>;
 	}>(null);
 
@@ -84,30 +86,39 @@
 		password = '';
 	}
 
-	const barColors = [
-		'#a78bfa', // lavender
-		'#f472b6', // pink
-		'#34d399', // emerald
-		'#fbbf24', // amber
-		'#60a5fa', // blue
-		'#fb923c', // orange
-		'#c084fc', // purple
-		'#2dd4bf', // teal
-		'#f87171', // red
-		'#a3e635', // lime
-	];
-
-	function getBarColor(index: number) {
-		return barColors[index % barColors.length];
-	}
+	const tierColors: Record<string, string> = {
+		'Under $5/month': '#60a5fa',  // blue
+		'$5–$10/month': '#34d399',    // emerald
+		'$10–$20/month': '#fbbf24',   // amber
+		'$20–$40/month': '#fb923c',   // orange
+		'$40+/month': '#f472b6',      // pink
+	};
+	const noTierColor = '#525270'; // muted gray for no price selected
 
 	function getBarWidth(count: number, max: number) {
 		return max > 0 ? (count / max) * 100 : 0;
 	}
 
-	function getMaxCount(answers: Record<string, number>) {
+	function getMaxCount(answers: Record<string, AnswerEntry>) {
 		const values = Object.values(answers);
-		return values.length > 0 ? Math.max(...values) : 0;
+		return values.length > 0 ? Math.max(...values.map(v => v.count)) : 0;
+	}
+
+	function getTierSegments(entry: AnswerEntry, tiers: string[]) {
+		const segments: { tier: string; count: number; color: string }[] = [];
+		let accounted = 0;
+		for (const tier of tiers) {
+			const count = entry.byPriceTier[tier] || 0;
+			if (count > 0) {
+				segments.push({ tier, count, color: tierColors[tier] || noTierColor });
+				accounted += count;
+			}
+		}
+		const unset = entry.count - accounted;
+		if (unset > 0) {
+			segments.push({ tier: 'No price selected', count: unset, color: noTierColor });
+		}
+		return segments;
 	}
 </script>
 
@@ -188,36 +199,51 @@
 					{#if q.type === 'long_text'}
 						<!-- Free text responses as a list -->
 						<div class="flex flex-col gap-2 max-h-64 overflow-y-auto">
-							{#each Object.entries(q.answers) as [text, count]}
+							{#each Object.entries(q.answers) as [text, entry]}
 								<div class="bg-void rounded-lg px-4 py-3 border border-void-border">
 									<p class="text-parchment-dark text-sm">{text}</p>
-									{#if count > 1}
-										<span class="text-stone text-xs">×{count}</span>
+									{#if entry.count > 1}
+										<span class="text-stone text-xs">×{entry.count}</span>
 									{/if}
 								</div>
 							{/each}
 						</div>
 					{:else}
-						<!-- Bar chart for select questions -->
+						<!-- Stacked bar chart for select questions -->
 						{@const max = getMaxCount(q.answers)}
 						<div class="flex flex-col gap-2.5">
-							{#each Object.entries(q.answers) as [answer, count], i}
+							{#each Object.entries(q.answers) as [answer, entry]}
+								{@const segments = getTierSegments(entry, data?.priceTiers ?? [])}
 								<div>
 									<div class="flex items-center justify-between text-sm mb-1">
-										<div class="flex items-center gap-2 truncate mr-3">
-											<span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background: {getBarColor(i)}"></span>
-											<span class="text-parchment-dark truncate">{answer}</span>
-										</div>
-										<span class="text-stone whitespace-nowrap">{count} <span class="text-xs">({Math.round((count / q.totalAnswered) * 100)}%)</span></span>
+										<span class="text-parchment-dark truncate mr-3">{answer}</span>
+										<span class="text-stone whitespace-nowrap">{entry.count} <span class="text-xs">({Math.round((entry.count / q.totalAnswered) * 100)}%)</span></span>
 									</div>
-									<div class="h-2 bg-void rounded-full overflow-hidden">
-										<div
-											class="h-full rounded-full transition-all"
-											style="width: {getBarWidth(count, max)}%; background: {getBarColor(i)}"
-										></div>
+									<div class="h-4 bg-void rounded-full overflow-hidden flex">
+										{#each segments as seg}
+											<div
+												class="h-full transition-all first:rounded-l-full last:rounded-r-full"
+												style="width: {getBarWidth(seg.count, max)}%; background: {seg.color}"
+												title="{seg.tier}: {seg.count}"
+											></div>
+										{/each}
 									</div>
 								</div>
 							{/each}
+						</div>
+
+						<!-- Price tier legend -->
+						<div class="flex flex-wrap gap-3 mt-4 pt-3 border-t border-void-border">
+							{#each data?.priceTiers ?? [] as tier}
+								<div class="flex items-center gap-1.5 text-xs text-stone">
+									<span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background: {tierColors[tier]}"></span>
+									{tier}
+								</div>
+							{/each}
+							<div class="flex items-center gap-1.5 text-xs text-stone">
+								<span class="inline-block w-2.5 h-2.5 rounded-full shrink-0" style="background: {noTierColor}"></span>
+								No price selected
+							</div>
 						</div>
 					{/if}
 				</div>

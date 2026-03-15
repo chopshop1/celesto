@@ -12,12 +12,16 @@ import {
 } from '$lib/server/analytics-auth';
 import { sql } from 'drizzle-orm';
 
+const priceTiers = ['Under $5/month', '$5–$10/month', '$10–$20/month', '$20–$40/month', '$40+/month'];
+
+type AnswerEntry = { count: number; byPriceTier: Record<string, number> };
+
 function buildMetrics(rows: { answers: unknown }[]) {
 	const totalResponses = rows.length;
 
 	const metrics: Record<
 		string,
-		{ question: string; type: string; totalAnswered: number; answers: Record<string, number> }
+		{ question: string; type: string; totalAnswered: number; answers: Record<string, AnswerEntry> }
 	> = {};
 
 	for (const question of waitlistSurveyQuestions) {
@@ -29,8 +33,20 @@ function buildMetrics(rows: { answers: unknown }[]) {
 		};
 	}
 
+	function increment(questionId: string, label: string, priceTier: string) {
+		if (!metrics[questionId].answers[label]) {
+			metrics[questionId].answers[label] = { count: 0, byPriceTier: {} };
+		}
+		metrics[questionId].answers[label].count++;
+		if (priceTier) {
+			metrics[questionId].answers[label].byPriceTier[priceTier] =
+				(metrics[questionId].answers[label].byPriceTier[priceTier] || 0) + 1;
+		}
+	}
+
 	for (const row of rows) {
 		const answers = row.answers as WaitlistSurveyAnswers;
+		const priceTier = answers.monthly_price_expectation || '';
 
 		for (const question of waitlistSurveyQuestions) {
 			const value = answers[question.id];
@@ -40,48 +56,43 @@ function buildMetrics(rows: { answers: unknown }[]) {
 				if (arr && arr.length > 0) {
 					metrics[question.id].totalAnswered++;
 					for (const item of arr) {
-						const label = item || '(empty)';
-						metrics[question.id].answers[label] = (metrics[question.id].answers[label] || 0) + 1;
+						increment(question.id, item || '(empty)', priceTier);
 					}
 				}
 			} else if (question.type === 'single_select') {
 				const str = value as string;
 				if (str) {
 					metrics[question.id].totalAnswered++;
-					metrics[question.id].answers[str] = (metrics[question.id].answers[str] || 0) + 1;
+					increment(question.id, str, priceTier);
 				}
 			} else if (question.type === 'long_text') {
 				const str = value as string;
 				if (str) {
 					metrics[question.id].totalAnswered++;
-					metrics[question.id].answers[str] = (metrics[question.id].answers[str] || 0) + 1;
+					increment(question.id, str, priceTier);
 				}
 			}
 		}
 
 		if (answers.primary_use_case === 'Other' && answers.primary_use_case_other) {
-			const key = `Other: ${answers.primary_use_case_other}`;
-			metrics['primary_use_case'].answers[key] =
-				(metrics['primary_use_case'].answers[key] || 0) + 1;
+			increment('primary_use_case', `Other: ${answers.primary_use_case_other}`, priceTier);
 		}
 		if (answers.astrology_apps_used?.includes('Other') && answers.astrology_apps_used_other) {
-			const key = `Other: ${answers.astrology_apps_used_other}`;
-			metrics['astrology_apps_used'].answers[key] =
-				(metrics['astrology_apps_used'].answers[key] || 0) + 1;
+			increment('astrology_apps_used', `Other: ${answers.astrology_apps_used_other}`, priceTier);
 		}
 	}
 
 	for (const key of Object.keys(metrics)) {
 		const sorted = Object.entries(metrics[key].answers)
-			.sort(([, a], [, b]) => b - a)
-			.reduce<Record<string, number>>((acc, [k, v]) => {
+			.sort(([, a], [, b]) => b.count - a.count)
+			.reduce<Record<string, AnswerEntry>>((acc, [k, v]) => {
 				acc[k] = v;
 				return acc;
 			}, {});
 		metrics[key].answers = sorted;
 	}
 
-	return { generatedAt: new Date().toISOString(), totalResponses, questions: metrics };
+	return { generatedAt: new Date().toISOString(), totalResponses, priceTiers, questions: metrics };
 }
 
 /** GET — uses session cookie for auth */
