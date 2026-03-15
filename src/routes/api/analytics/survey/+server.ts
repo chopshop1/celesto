@@ -10,6 +10,7 @@ import {
 	setSessionCookie,
 	COOKIE_NAME
 } from '$lib/server/analytics-auth';
+import { sql } from 'drizzle-orm';
 
 function buildMetrics(rows: { answers: unknown }[]) {
 	const totalResponses = rows.length;
@@ -84,21 +85,27 @@ function buildMetrics(rows: { answers: unknown }[]) {
 }
 
 /** GET — uses session cookie for auth */
-export const GET: RequestHandler = async ({ cookies }) => {
+export const GET: RequestHandler = async ({ cookies, url }) => {
 	const token = cookies.get(COOKIE_NAME);
 	if (!token || !env.ANALYTICS_PASSWORD || !(await validateSessionToken(token, env.ANALYTICS_PASSWORD))) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const rows = await db
+	const paidOnly = url.searchParams.get('paid') === 'true';
+
+	const query = db
 		.select({ answers: waitlistSurveyResponses.answers })
 		.from(waitlistSurveyResponses);
+
+	const rows = paidOnly
+		? await query.where(sql`${waitlistSurveyResponses.answers}->>'has_paid_before' = 'Yes'`)
+		: await query;
 
 	return json(buildMetrics(rows));
 };
 
 /** POST — password login, sets session cookie */
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request, cookies, url }) => {
 	let body: { password?: string };
 
 	try {
@@ -111,9 +118,15 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const rows = await db
+	const paidOnly = url.searchParams.get('paid') === 'true';
+
+	const query = db
 		.select({ answers: waitlistSurveyResponses.answers })
 		.from(waitlistSurveyResponses);
+
+	const rows = paidOnly
+		? await query.where(sql`${waitlistSurveyResponses.answers}->>'has_paid_before' = 'Yes'`)
+		: await query;
 
 	const token = await createSessionToken(env.ANALYTICS_PASSWORD);
 
