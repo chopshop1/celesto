@@ -5,6 +5,7 @@
 	let error = $state('');
 	let loading = $state(false);
 	let checking = $state(true);
+	let paidOnly = $state(false);
 	let data = $state<null | {
 		generatedAt: string;
 		totalResponses: number;
@@ -16,13 +17,20 @@
 		}>;
 	}>(null);
 
+	function apiUrl() {
+		return '/api/analytics/survey' + (paidOnly ? '?paid=true' : '');
+	}
+
+	async function fetchData() {
+		const res = await fetch(apiUrl());
+		if (res.ok) {
+			data = await res.json();
+		}
+	}
+
 	onMount(async () => {
-		// Check if already authed via session cookie
 		try {
-			const res = await fetch('/api/analytics/survey');
-			if (res.ok) {
-				data = await res.json();
-			}
+			await fetchData();
 		} catch {
 			// not authed, show password form
 		} finally {
@@ -40,7 +48,7 @@
 		error = '';
 
 		try {
-			const res = await fetch('/api/analytics/survey', {
+			const res = await fetch(apiUrl(), {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ password: password.trim() })
@@ -59,6 +67,15 @@
 			error = 'Failed to fetch data';
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function togglePaidFilter() {
+		paidOnly = !paidOnly;
+		try {
+			await fetchData();
+		} catch {
+			// ignore
 		}
 	}
 
@@ -117,12 +134,20 @@
 		<div class="max-w-3xl mx-auto">
 			<div class="flex items-center justify-between mb-10">
 				<h1 class="text-2xl font-serif font-bold text-lavender">Survey Analytics</h1>
-				<button
-					onclick={lock}
-					class="text-stone text-sm hover:text-parchment transition-colors"
-				>
-					Lock
-				</button>
+				<div class="flex items-center gap-4">
+					<button
+						onclick={togglePaidFilter}
+						class="text-sm px-3 py-1.5 rounded-lg border transition-colors {paidOnly ? 'bg-lavender text-void border-lavender' : 'bg-void-surface text-stone border-void-border hover:text-parchment'}"
+					>
+						{paidOnly ? 'Paid users only' : 'All users'}
+					</button>
+					<button
+						onclick={lock}
+						class="text-stone text-sm hover:text-parchment transition-colors"
+					>
+						Lock
+					</button>
+				</div>
 			</div>
 
 			<!-- Summary -->
